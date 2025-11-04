@@ -3,29 +3,49 @@
 
 import { useEffect, useState } from 'react';
 import { Product } from '@/types';
-import { getProducts } from '@/lib/products';
+import { getProducts, deleteProduct } from '@/lib/products';
 import DashboardLayout from '@/components/layout/DashboardLayout';
 import ProtectedRoute from '@/components/auth/ProtectedRoute';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 export default function DashboardProductsPage() {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
+  const router = useRouter();
 
   useEffect(() => {
-    async function loadProducts() {
-      try {
-        const productsData = await getProducts();
-        setProducts(productsData);
-      } catch (error) {
-        console.error('Error loading products:', error);
-      } finally {
-        setLoading(false);
-      }
-    }
-
     loadProducts();
   }, []);
+
+  const loadProducts = async () => {
+    try {
+      const productsData = await getProducts();
+      setProducts(productsData);
+    } catch (error) {
+      console.error('Error loading products:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleDelete = async (id: string) => {
+    if (!confirm('Are you sure you want to delete this product?')) {
+      return;
+    }
+
+    setDeletingId(id);
+    try {
+      await deleteProduct(id);
+      await loadProducts(); // Refresh the list
+    } catch (error) {
+      console.error('Error deleting product:', error);
+      alert('Failed to delete product');
+    } finally {
+      setDeletingId(null);
+    }
+  };
 
   if (loading) {
     return (
@@ -85,7 +105,17 @@ export default function DashboardProductsPage() {
                     <tr key={product.id} className="hover:bg-gray-50">
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="flex items-center">
-                          <div className="flex-shrink-0 h-10 w-10 bg-gray-200 rounded-lg"></div>
+                          <div className="flex-shrink-0 h-10 w-10 bg-gray-200 rounded-lg flex items-center justify-center">
+                            {product.imageUrl ? (
+                              <img
+                                src={product.imageUrl}
+                                alt={product.name}
+                                className="h-10 w-10 rounded-lg object-cover"
+                              />
+                            ) : (
+                              <span className="text-gray-400 text-xs">No image</span>
+                            )}
+                          </div>
                           <div className="ml-4">
                             <div className="text-sm font-medium text-gray-900">
                               {product.name}
@@ -118,11 +148,18 @@ export default function DashboardProductsPage() {
                         </span>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                        <button className="text-pink-600 hover:text-pink-900 mr-4">
+                        <button 
+                          onClick={() => router.push(`/dashboard/products/${product.id}/edit`)}
+                          className="text-pink-600 hover:text-pink-900 mr-4"
+                        >
                           Edit
                         </button>
-                        <button className="text-red-600 hover:text-red-900">
-                          Delete
+                        <button 
+                          onClick={() => handleDelete(product.id)}
+                          disabled={deletingId === product.id}
+                          className="text-red-600 hover:text-red-900 disabled:opacity-50"
+                        >
+                          {deletingId === product.id ? 'Deleting...' : 'Delete'}
                         </button>
                       </td>
                     </tr>
@@ -132,7 +169,7 @@ export default function DashboardProductsPage() {
 
               {products.length === 0 && (
                 <div className="text-center py-12">
-                  <p className="text-gray-500">No products found.</p>
+                  <p className="text-gray-500 mb-4">No products found.</p>
                   <Link
                     href="/dashboard/products/new"
                     className="text-pink-600 hover:text-pink-700 font-medium"

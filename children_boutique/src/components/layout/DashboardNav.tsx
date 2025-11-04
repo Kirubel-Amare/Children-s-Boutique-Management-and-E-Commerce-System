@@ -5,13 +5,13 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useAuth } from '@/hooks/useAuth';
 
+// Update the navigation array in DashboardNav.tsx
 const navigation = [
   { name: 'Overview', href: '/dashboard', role: ['ADMIN', 'TELLER'] },
   { name: 'Products', href: '/dashboard/products', role: ['ADMIN', 'TELLER'] },
   { name: 'Sales', href: '/dashboard/sales', role: ['ADMIN', 'TELLER'] },
   { name: 'Users', href: '/admin/users', role: ['ADMIN'] },
 ];
-
 export default function DashboardNav() {
   const pathname = usePathname();
   const { user } = useAuth();
