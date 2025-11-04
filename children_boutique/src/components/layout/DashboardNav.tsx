@@ -5,13 +5,15 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useAuth } from '@/hooks/useAuth';
 
-// Update the navigation array in DashboardNav.tsx
 const navigation = [
   { name: 'Overview', href: '/dashboard', role: ['ADMIN', 'TELLER'] },
   { name: 'Products', href: '/dashboard/products', role: ['ADMIN', 'TELLER'] },
   { name: 'Sales', href: '/dashboard/sales', role: ['ADMIN', 'TELLER'] },
+  { name: 'Reports', href: '/dashboard/reports', role: ['ADMIN', 'TELLER'] },
+  { name: 'Admin', href: '/admin', role: ['ADMIN'] },
   { name: 'Users', href: '/admin/users', role: ['ADMIN'] },
 ];
+
 export default function DashboardNav() {
   const pathname = usePathname();
   const { user } = useAuth();
@@ -30,11 +32,11 @@ export default function DashboardNav() {
                 <Link
                   key={item.name}
                   href={item.href}
-                  className={`px-3 py-2 rounded-md text-sm font-medium ${
+                  className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
                     pathname === item.href
                       ? 'bg-gray-900 text-white'
                       : 'text-gray-300 hover:bg-gray-700 hover:text-white'
-                  } transition-colors`}
+                  }`}
                 >
                   {item.name}
                 </Link>

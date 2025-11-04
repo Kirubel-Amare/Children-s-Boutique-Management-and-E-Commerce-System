@@ -88,7 +88,7 @@ export default function SalesForm() {
             value={selectedProductId}
             onChange={(e) => setSelectedProductId(e.target.value)}
             required
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-pink-500"
+            className="block w-full pl-10 pr-4 py-3 b rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-pink-500 bg-white text-gray-900 placeholder-gray-500 transition-colors"
           >
             <option value="">Choose a product</option>
             {products.map(product => (
@@ -139,7 +139,7 @@ export default function SalesForm() {
             value={quantity}
             onChange={(e) => setQuantity(Number(e.target.value))}
             required
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-pink-500"
+            className="block w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-pink-500 bg-white text-gray-900 placeholder-gray-500 transition-colors"
           />
           {selectedProduct && (
             <p className="text-sm text-gray-500 mt-1">

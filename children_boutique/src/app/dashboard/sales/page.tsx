@@ -7,6 +7,7 @@ import { getSales } from '@/lib/sales';
 import DashboardLayout from '@/components/layout/DashboardLayout';
 import ProtectedRoute from '@/components/auth/ProtectedRoute';
 import SalesForm from '@/components/sales/SalesForm';
+import SidebarLayout from '@/components/layout/SidebarLayout';
 
 export default function SalesPage() {
   const [sales, setSales] = useState<SaleWithDetails[]>([]);
@@ -32,7 +33,7 @@ export default function SalesPage() {
 
   return (
     <ProtectedRoute>
-      <DashboardLayout>
+      <SidebarLayout>
         <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
           <div className="px-4 py-6 sm:px-0">
             <div className="mb-8">
@@ -131,7 +132,7 @@ export default function SalesPage() {
             </div>
           </div>
         </div>
-      </DashboardLayout>
+      </SidebarLayout>
     </ProtectedRoute>
   );
 }

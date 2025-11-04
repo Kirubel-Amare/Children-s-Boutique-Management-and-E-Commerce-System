@@ -1,15 +1,18 @@
-// src/app/dashboard/page.tsx
+// Updated src/app/dashboard/page.tsx with new layout
 'use client';
 
 import { useEffect, useState } from 'react';
 import { getProducts} from '@/lib/products';
 import { getNotifications } from '@/lib/notifications';
-import { getSales, SaleWithDetails } from '@/lib/sales';
+import {SaleWithDetails, getSales } from '@/lib/sales';
+import { Product } from '@/types';
 import { Notification } from '@/lib/notifications';
-import DashboardLayout from '@/components/layout/DashboardLayout';
+import SidebarLayout from '@/components/layout/SidebarLayout';
 import ProtectedRoute from '@/components/auth/ProtectedRoute';
 import Link from 'next/link';
-import { Product } from '@/types';
+import QuickStats from '@/components/dashboard/QuickStats';
+import RecentActivity from '@/components/dashboard/RecentActivity';
+import { ChartBarIcon, CheckCircleIcon, ExclamationTriangleIcon, ShoppingBagIcon, UserGroupIcon } from '@heroicons/react/24/outline';
 
 export default function Dashboard() {
   const [products, setProducts] = useState<Product[]>([]);
@@ -52,199 +55,201 @@ export default function Dashboard() {
   
   const unreadNotifications = notifications.filter(n => !n.isRead).length;
 
+  // Mock activity data - in real app, this would come from API
+  const recentActivities = [
+    {
+      id: 1,
+      type: 'sale' as const,
+      description: 'New sale recorded - Kids T-Shirt',
+      time: '2 minutes ago',
+      user: 'Teller User'
+    },
+    {
+      id: 2,
+      type: 'alert' as const,
+      description: 'Low stock alert - Children Sneakers',
+      time: '1 hour ago',
+      user: 'System'
+    },
+    {
+      id: 3,
+      type: 'sale' as const,
+      description: 'New sale recorded - Baby Romper',
+      time: '2 hours ago',
+      user: 'Teller User'
+    }
+  ];
+
+  const stats = [
+    {
+      name: 'Total Revenue',
+      value: `$${totalRevenue.toFixed(2)}`,
+      change: '10.2%',
+      changeType: 'increase' as const,
+    },
+    {
+      name: 'Today\'s Sales',
+      value: `$${todayRevenue.toFixed(2)}`,
+      change: '5.1%',
+      changeType: 'increase' as const,
+    },
+    {
+      name: 'Total Products',
+      value: totalProducts.toString(),
+      change: '2.4%',
+      changeType: 'increase' as const,
+    },
+    {
+      name: 'Alerts',
+      value: unreadNotifications.toString(),
+      change: '12.1%',
+      changeType: 'increase' as const,
+    },
+  ];
+
   if (loading) {
     return (
       <ProtectedRoute>
-        <DashboardLayout>
-          <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
-            <div className="px-4 py-6 sm:px-0">
-              <div className="flex justify-center items-center h-64">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-pink-600"></div>
-              </div>
-            </div>
+        <SidebarLayout>
+          <div className="flex justify-center items-center h-64">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-pink-600"></div>
           </div>
-        </DashboardLayout>
+        </SidebarLayout>
       </ProtectedRoute>
     );
   }
 
   return (
     <ProtectedRoute>
-      <DashboardLayout>
-        <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
-          <div className="px-4 py-6 sm:px-0">
-            <div className="mb-8">
-              <h1 className="text-2xl font-bold text-gray-900 mb-2">
-                Dashboard Overview
-              </h1>
-              <p className="text-gray-600">
-                Welcome to your boutique management dashboard
-              </p>
-            </div>
+      <SidebarLayout>
+        <div className="space-y-6">
+          {/* Welcome Section */}
+          <div className="bg-gradient-to-r from-pink-500 to-purple-600 rounded-xl shadow-sm p-6 text-white">
+            <h1 className="text-2xl font-bold mb-2">Welcome back! 👋</h1>
+            <p className="opacity-90">Here's what's happening with your boutique today.</p>
+          </div>
 
-            {/* Key Metrics */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-              <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
-                <div className="flex items-center">
-                  <div className="flex-shrink-0">
-                    <div className="w-8 h-8 bg-pink-100 rounded-lg flex items-center justify-center">
-                      <span className="text-pink-600 font-bold">₿</span>
-                    </div>
-                  </div>
-                  <div className="ml-4">
-                    <p className="text-sm font-medium text-gray-500">Total Revenue</p>
-                    <p className="text-2xl font-bold text-gray-900">${totalRevenue.toFixed(2)}</p>
-                  </div>
-                </div>
-              </div>
+          {/* Quick Stats */}
+          <QuickStats stats={stats} />
 
-              <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
-                <div className="flex items-center">
-                  <div className="flex-shrink-0">
-                    <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
-                      <span className="text-green-600 font-bold">📦</span>
-                    </div>
-                  </div>
-                  <div className="ml-4">
-                    <p className="text-sm font-medium text-gray-500">Total Products</p>
-                    <p className="text-2xl font-bold text-gray-900">{totalProducts}</p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
-                <div className="flex items-center">
-                  <div className="flex-shrink-0">
-                    <div className="w-8 h-8 bg-yellow-100 rounded-lg flex items-center justify-center">
-                      <span className="text-yellow-600 font-bold">⚠️</span>
-                    </div>
-                  </div>
-                  <div className="ml-4">
-                    <p className="text-sm font-medium text-gray-500">Low Stock</p>
-                    <p className="text-2xl font-bold text-gray-900">{lowStockProducts}</p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
-                <div className="flex items-center">
-                  <div className="flex-shrink-0">
-                    <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
-                      <span className="text-blue-600 font-bold">🔔</span>
-                    </div>
-                  </div>
-                  <div className="ml-4">
-                    <p className="text-sm font-medium text-gray-500">Notifications</p>
-                    <p className="text-2xl font-bold text-gray-900">{unreadNotifications}</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Quick Actions and Recent Activity */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          {/* Main Content Grid */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            {/* Left Column - Quick Actions & Recent Activity */}
+            <div className="lg:col-span-2 space-y-6">
               {/* Quick Actions */}
-              <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h3>
-                <div className="space-y-3">
-                  <Link
-                    href="/dashboard/products/new"
-                    className="flex items-center p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
-                  >
-                    <span className="text-pink-600 font-bold mr-3">+</span>
-                    <span>Add New Product</span>
-                  </Link>
-                  <Link
-                    href="/dashboard/sales"
-                    className="flex items-center p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
-                  >
-                    <span className="text-green-600 font-bold mr-3">💰</span>
-                    <span>Record Sale</span>
-                  </Link>
-                  <Link
-                    href="/dashboard/products"
-                    className="flex items-center p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
-                  >
-                    <span className="text-blue-600 font-bold mr-3">📊</span>
-                    <span>View Products</span>
-                  </Link>
-                  {lowStockProducts > 0 && (
+              <div className="bg-white shadow rounded-lg">
+                <div className="px-4 py-5 sm:px-6 border-b border-gray-200">
+                  <h3 className="text-lg leading-6 font-medium text-gray-900">Quick Actions</h3>
+                </div>
+                <div className="p-6">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                     <Link
-                      href="/dashboard/products?filter=low-stock"
-                      className="flex items-center p-3 border border-yellow-200 bg-yellow-50 rounded-lg hover:bg-yellow-100 transition-colors"
+                      href="/dashboard/products/new"
+                      className="flex flex-col items-center p-4 border-2 border-dashed border-gray-300 rounded-lg hover:border-pink-500 hover:bg-pink-50 transition-all group"
                     >
-                      <span className="text-yellow-600 font-bold mr-3">⚠️</span>
-                      <span>View Low Stock Items ({lowStockProducts})</span>
+                      <span className="text-2xl mb-2 group-hover:scale-110 transition-transform">➕</span>
+                      <span className="font-medium text-gray-900">Add Product</span>
                     </Link>
+
+                    <Link
+                      href="/dashboard/sales"
+                      className="flex flex-col items-center p-4 border-2 border-dashed border-gray-300 rounded-lg hover:border-pink-500 hover:bg-pink-50 transition-all group"
+                    >
+                      <span className="text-2xl mb-2 group-hover:scale-110 transition-transform">💰</span>
+                      <span className="font-medium text-gray-900">Record Sale</span>
+                    </Link>
+
+                    <Link
+                      href="/dashboard/products"
+                      className="flex flex-col items-center p-4 border-2 border-dashed border-gray-300 rounded-lg hover:border-pink-500 hover:bg-pink-50 transition-all group"
+                    >
+                      <span className="text-2xl mb-2 group-hover:scale-110 transition-transform">📦</span>
+                      <span className="font-medium text-gray-900">View Products</span>
+                    </Link>
+                  </div>
+                </div>
+              </div>
+
+              {/* Recent Activity */}
+              <RecentActivity activities={recentActivities} />
+            </div>
+
+            {/* Right Column - Alerts & Inventory Status */}
+            <div className="space-y-6">
+              {/* Stock Alerts */}
+              <div className="bg-white shadow rounded-lg">
+                <div className="px-4 py-5 sm:px-6 border-b border-gray-200">
+                  <h3 className="text-lg leading-6 font-medium text-gray-900">Stock Alerts</h3>
+                </div>
+                <div className="p-6 space-y-4">
+                  {lowStockProducts > 0 && (
+                    <div className="flex items-center justify-between p-3 bg-yellow-50 rounded-lg border border-yellow-200">
+                      <div className="flex items-center">
+                        <ExclamationTriangleIcon className="h-5 w-5 text-yellow-500 mr-3" />
+                        <span className="font-medium text-yellow-800">Low Stock</span>
+                      </div>
+                      <span className="bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full text-sm font-medium">
+                        {lowStockProducts}
+                      </span>
+                    </div>
+                  )}
+                  
+                  {outOfStockProducts > 0 && (
+                    <div className="flex items-center justify-between p-3 bg-red-50 rounded-lg border border-red-200">
+                      <div className="flex items-center">
+                        <ExclamationTriangleIcon className="h-5 w-5 text-red-500 mr-3" />
+                        <span className="font-medium text-red-800">Out of Stock</span>
+                      </div>
+                      <span className="bg-red-100 text-red-800 px-2 py-1 rounded-full text-sm font-medium">
+                        {outOfStockProducts}
+                      </span>
+                    </div>
+                  )}
+
+                  {(lowStockProducts === 0 && outOfStockProducts === 0) && (
+                    <div className="text-center py-4 text-gray-500">
+                      <CheckCircleIcon className="h-8 w-8 text-green-500 mx-auto mb-2" />
+                      <p>All products are well stocked!</p>
+                    </div>
                   )}
                 </div>
               </div>
 
-              {/* Recent Sales */}
-              <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">Recent Sales</h3>
-                {sales.length === 0 ? (
-                  <p className="text-gray-500 text-center py-4">No recent sales</p>
-                ) : (
-                  <div className="space-y-3">
-                    {sales.slice(0, 5).map((sale) => (
-                      <div key={sale.id} className="flex items-center justify-between p-3 border border-gray-100 rounded-lg">
-                        <div>
-                          <p className="font-medium text-gray-900">{sale.product.name}</p>
-                          <p className="text-sm text-gray-500">
-                            {sale.quantity} x ${sale.product.price}
-                          </p>
-                        </div>
-                        <div className="text-right">
-                          <p className="font-semibold text-green-600">${sale.total.toFixed(2)}</p>
-                          <p className="text-xs text-gray-400">
-                            {new Date(sale.createdAt).toLocaleDateString()}
-                          </p>
-                        </div>
-                      </div>
-                    ))}
-                    {sales.length > 5 && (
-                      <Link
-                        href="/dashboard/sales"
-                        className="block text-center text-pink-600 hover:text-pink-700 font-medium py-2"
-                      >
-                        View All Sales
-                      </Link>
-                    )}
-                  </div>
-                )}
-              </div>
-            </div>
-
-            {/* Low Stock Alert */}
-            {lowStockProducts > 0 && (
-              <div className="mt-8 bg-yellow-50 border border-yellow-200 rounded-lg p-6">
-                <div className="flex items-center">
-                  <div className="flex-shrink-0">
-                    <span className="text-yellow-600 text-2xl">⚠️</span>
-                  </div>
-                  <div className="ml-4">
-                    <h3 className="text-lg font-medium text-yellow-800">
-                      Low Stock Alert
-                    </h3>
-                    <p className="text-yellow-700">
-                      You have {lowStockProducts} product{lowStockProducts > 1 ? 's' : ''} running low on stock.
-                    </p>
-                  </div>
-                  <div className="ml-auto">
-                    <Link
-                      href="/dashboard/products?filter=low-stock"
-                      className="bg-yellow-600 text-white px-4 py-2 rounded-md hover:bg-yellow-700 transition-colors"
-                    >
-                      Review Stock
-                    </Link>
-                  </div>
+              {/* Quick Links */}
+              <div className="bg-white shadow rounded-lg">
+                <div className="px-4 py-5 sm:px-6 border-b border-gray-200">
+                  <h3 className="text-lg leading-6 font-medium text-gray-900">Quick Links</h3>
+                </div>
+                <div className="p-6 space-y-3">
+                  <Link
+                    href="/dashboard/reports"
+                    className="flex items-center p-3 rounded-lg hover:bg-gray-50 transition-colors group"
+                  >
+                    <ChartBarIcon className="h-5 w-5 text-gray-400 mr-3 group-hover:text-pink-500" />
+                    <span className="font-medium text-gray-900">View Reports</span>
+                  </Link>
+                  
+                  <Link
+                    href="/admin/users"
+                    className="flex items-center p-3 rounded-lg hover:bg-gray-50 transition-colors group"
+                  >
+                    <UserGroupIcon className="h-5 w-5 text-gray-400 mr-3 group-hover:text-pink-500" />
+                    <span className="font-medium text-gray-900">Manage Users</span>
+                  </Link>
+                  
+                  <Link
+                    href="/products"
+                    className="flex items-center p-3 rounded-lg hover:bg-gray-50 transition-colors group"
+                  >
+                    <ShoppingBagIcon className="h-5 w-5 text-gray-400 mr-3 group-hover:text-pink-500" />
+                    <span className="font-medium text-gray-900">Public Store</span>
+                  </Link>
                 </div>
               </div>
-            )}
+            </div>
           </div>
         </div>
-      </DashboardLayout>
+      </SidebarLayout>
     </ProtectedRoute>
   );
 }

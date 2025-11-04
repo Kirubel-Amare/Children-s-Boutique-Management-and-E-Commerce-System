@@ -8,6 +8,7 @@ import DashboardLayout from '@/components/layout/DashboardLayout';
 import ProtectedRoute from '@/components/auth/ProtectedRoute';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import SidebarLayout from '@/components/layout/SidebarLayout';
 
 export default function DashboardProductsPage() {
   const [products, setProducts] = useState<Product[]>([]);
@@ -50,7 +51,7 @@ export default function DashboardProductsPage() {
   if (loading) {
     return (
       <ProtectedRoute>
-        <DashboardLayout>
+        <SidebarLayout>
           <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
             <div className="px-4 py-6 sm:px-0">
               <div className="flex justify-center items-center h-64">
@@ -58,14 +59,14 @@ export default function DashboardProductsPage() {
               </div>
             </div>
           </div>
-        </DashboardLayout>
+        </SidebarLayout>
       </ProtectedRoute>
     );
   }
 
   return (
     <ProtectedRoute>
-      <DashboardLayout>
+      <SidebarLayout>
         <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
           <div className="px-4 py-6 sm:px-0">
             <div className="flex justify-between items-center mb-6">
@@ -181,7 +182,7 @@ export default function DashboardProductsPage() {
             </div>
           </div>
         </div>
-      </DashboardLayout>
+      </SidebarLayout>
     </ProtectedRoute>
   );
 }

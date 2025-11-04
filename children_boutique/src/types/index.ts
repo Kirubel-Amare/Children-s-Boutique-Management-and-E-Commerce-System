@@ -22,6 +22,7 @@ declare module "next-auth" {
 
 // Your existing types...
 export interface Product {
+  [x: string]: any;
   id: string;
   name: string;
   description: string | null;
