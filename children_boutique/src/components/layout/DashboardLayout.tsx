@@ -3,6 +3,7 @@
 
 import { useAuth } from '@/hooks/useAuth';
 import { signOut } from 'next-auth/react';
+import DashboardNav from './DashboardNav';
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
@@ -39,6 +40,9 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
           </div>
         </div>
       </div>
+      
+      <DashboardNav />
+      
       {children}
     </div>
   );
