@@ -3,6 +3,7 @@
 
 import Link from 'next/link';
 import { useAuth } from '@/hooks/useAuth';
+import NotificationBell from '@/components/notifications/NotificationBell';
 
 export default function Header() {
   const { isAuthenticated, user } = useAuth();
@@ -16,7 +17,7 @@ export default function Header() {
               Children&apos;s Boutique
             </Link>
           </div>
-          <nav className="flex items-center space-x-8">
+          <nav className="flex items-center space-x-6">
             <Link href="/" className="text-gray-700 hover:text-pink-600">
               Home
             </Link>
@@ -34,6 +35,10 @@ export default function Header() {
                     Admin
                   </Link>
                 )}
+                
+                {/* Add Notification Bell */}
+                <NotificationBell />
+                
                 <span className="text-sm text-gray-500">
                   {user?.name} ({user?.role})
                 </span>

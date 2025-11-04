@@ -18,6 +18,7 @@ model User {
   updatedAt DateTime @updatedAt
   
   sales Sale[]
+  notifications Notification[]
   
   @@map("users")
 }
@@ -36,6 +37,7 @@ model Product {
   updatedAt   DateTime @updatedAt
   
   sales Sale[]
+  notifications Notification[]
   
   @@map("products")
 }
@@ -57,4 +59,20 @@ model Sale {
 enum UserRole {
   ADMIN
   TELLER
+}
+model Notification {
+  id        String   @id @default(cuid())
+  type      String   // 'low_stock', 'sale', 'system'
+  title     String
+  message   String
+  isRead    Boolean  @default(false)
+  productId String?
+  userId    String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  product Product? @relation(fields: [productId], references: [id], onDelete: Cascade)
+  user    User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("notifications")
 }
