@@ -4,7 +4,6 @@
 import { useEffect, useState } from 'react';
 import { SaleWithDetails } from '@/lib/sales';
 import { getSales } from '@/lib/sales';
-import DashboardLayout from '@/components/layout/DashboardLayout';
 import ProtectedRoute from '@/components/auth/ProtectedRoute';
 import SalesForm from '@/components/sales/SalesForm';
 import SidebarLayout from '@/components/layout/SidebarLayout';

@@ -1,8 +1,7 @@
-// src/app/layout.tsx
+// src/app/layout.tsx (Root layout - remove Layout wrapper)
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
-import Layout from '@/components/layout/Layout'
 import SessionProvider from '@/providers/SessionProvider'
 import { CartProvider } from '@/context/CartContext';
 
@@ -23,7 +22,7 @@ export default function RootLayout({
       <body className={inter.className}>
         <SessionProvider>
           <CartProvider>
-            <Layout>{children}</Layout>
+            {children} {/* Remove Layout wrapper here */}
           </CartProvider>
         </SessionProvider>
       </body>
