@@ -122,10 +122,10 @@ export default function ProductsPage() {
             <input
               type="text"
               id="search"
-              placeholder="Search by name, description, or color..."
+              placeholder="Search by name, description"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-pink-500"
+              className="block w-full pl-3 pr-4 py-3 border rounded-xl focus:ring-1 focus:ring-pink-500 focus:border-pink-500 bg-white text-gray-900 placeholder-gray-500 transition-colors"
             />
           </div>
 
@@ -138,7 +138,7 @@ export default function ProductsPage() {
               id="category"
               value={selectedCategory}
               onChange={(e) => setSelectedCategory(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-pink-500"
+              className="block w-full pl-3 pr-4 py-3 border rounded-xl focus:ring-1 focus:ring-pink-500 focus:border-pink-500 bg-white text-gray-900 placeholder-gray-500 transition-colors"
             >
               {categories.map(category => (
                 <option key={category} value={category}>
@@ -157,7 +157,7 @@ export default function ProductsPage() {
               id="sort"
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-pink-500"
+              className="block w-full pl-3 pr-4 py-3 border rounded-xl focus:ring-1 focus:ring-pink-500 focus:border-pink-500 bg-white text-gray-900 placeholder-gray-500 transition-colors"
             >
               {sortOptions.map(option => (
                 <option key={option.value} value={option.value}>

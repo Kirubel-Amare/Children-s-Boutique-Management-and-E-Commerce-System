@@ -44,19 +44,19 @@ export default function ContactPage() {
                   {
                     icon: PhoneIcon,
                     title: 'Phone',
-                    content: '+1 (555) 123-4567',
+                    content: '+251 955901762',
                     description: 'Mon-Fri from 8am to 6pm'
                   },
                   {
                     icon: EnvelopeIcon,
                     title: 'Email',
-                    content: 'hello@boutique.com',
+                    content: 'akirubel8@gmail.com',
                     description: 'Email support anytime'
                   },
                   {
                     icon: MapPinIcon,
                     title: 'Store',
-                    content: '123 Kids Street',
+                    content: 'Deneba CBE Street',
                     description: 'Fashion City, FC 12345'
                   }
                 ].map((item, index) => (
@@ -78,16 +78,16 @@ export default function ContactPage() {
                 <h3 className="font-semibold text-gray-900 mb-4">Store Hours</h3>
                 <div className="space-y-2 text-sm">
                   <div className="flex justify-between">
-                    <span className="text-gray-600">Monday - Friday</span>
-                    <span className="font-medium">9:00 AM - 6:00 PM</span>
+                    <span className="text-gray-700">Monday - Friday</span>
+                    <span className="font-medium text-gray-700">9:00 AM - 6:00 PM</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-600">Saturday</span>
-                    <span className="font-medium">10:00 AM - 4:00 PM</span>
+                    <span className="text-gray-700">Saturday</span>
+                    <span className="font-medium text-gray-700">10:00 AM - 4:00 PM</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-600">Sunday</span>
-                    <span className="font-medium">Closed</span>
+                    <span className="text-gray-700">Sunday</span>
+                    <span className="font-medium text-gray-700">opend</span>
                   </div>
                 </div>
               </div>
@@ -106,7 +106,7 @@ export default function ContactPage() {
                     required
                     value={formData.name}
                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-pink-500 transition-colors"
+                    className="block w-full pl-3 pr-4 py-3 border rounded-xl focus:ring-1 focus:ring-pink-500 focus:border-pink-500 bg-white text-gray-900 placeholder-gray-500 transition-colors"
                     placeholder="Your name"
                   />
                 </div>
@@ -121,7 +121,7 @@ export default function ContactPage() {
                     required
                     value={formData.email}
                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-pink-500 transition-colors"
+                    className="block w-full pl-3 pr-4 py-3 border rounded-xl focus:ring-1 focus:ring-pink-500 focus:border-pink-500 bg-white text-gray-900 placeholder-gray-500 transition-colors"
                     placeholder="your.email@example.com"
                   />
                 </div>
@@ -136,7 +136,7 @@ export default function ContactPage() {
                     required
                     value={formData.message}
                     onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-pink-500 transition-colors"
+                    className="block w-full pl-3 pr-4 py-3 border rounded-xl focus:ring-1 focus:ring-pink-500 focus:border-pink-500 bg-white text-gray-900 placeholder-gray-500 transition-colors"
                     placeholder="How can we help you?"
                   />
                 </div>

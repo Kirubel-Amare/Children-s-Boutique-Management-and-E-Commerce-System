@@ -21,7 +21,7 @@ export default function Header() {
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center">
               <Link href="/" className="text-2xl font-bold text-pink-600 hover:text-pink-700 transition-colors">
-                Children&apos;s Boutique
+                Kiya Children&apos;s Boutique
               </Link>
             </div>
 
