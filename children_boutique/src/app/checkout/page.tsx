@@ -15,6 +15,7 @@ import {
   MapPinIcon
 } from '@heroicons/react/24/outline';
 import { createOrder } from '@/lib/orders';
+import Layout from '@/components/layout/Layout';
 
 export default function CheckoutPage() {
   const { state, dispatch } = useCart();
@@ -117,6 +118,7 @@ const handleSubmit = async (e: React.FormEvent) => {
 };
   if (state.items.length === 0) {
     return (
+      <Layout>
       <div className="min-h-screen bg-gray-50 py-12">
         <div className="max-w-2xl mx-auto px-4 text-center">
           <div className="bg-white rounded-2xl shadow-sm p-12">
@@ -132,10 +134,12 @@ const handleSubmit = async (e: React.FormEvent) => {
           </div>
         </div>
       </div>
+      </Layout>
     );
   }
 
   return (
+    <Layout>
     <div className="min-h-screen bg-gray-50 py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
@@ -519,5 +523,6 @@ const handleSubmit = async (e: React.FormEvent) => {
         </div>
       </div>
     </div>
+    </Layout>
   );
 }

@@ -1,9 +1,11 @@
 // src/app/about/page.tsx
 import Link from 'next/link';
 import { HeartIcon, UsersIcon, SparklesIcon } from '@heroicons/react/24/outline';
+import Layout from '@/components/layout/Layout';
 
 export default function AboutPage() {
   return (
+    <Layout>
     <div className="bg-white">
       {/* Hero Section */}
       <section className="bg-gradient-to-br from-pink-50 to-purple-50 py-20">
@@ -111,5 +113,6 @@ export default function AboutPage() {
         </div>
       </section>
     </div>
+    </Layout>
   );
 }

@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { getProducts } from '@/lib/products';
 import { Product } from '@/types';
 import { ChevronRightIcon, StarIcon, ShieldCheckIcon, TruckIcon, HeartIcon } from '@heroicons/react/24/outline';
+import Layout from '@/components/layout/Layout';
 
 export default function Home() {
   const [featuredProducts, setFeaturedProducts] = useState<Product[]>([]);
@@ -29,6 +30,7 @@ export default function Home() {
   };
 
   return (
+    <Layout>
     <div className="min-h-screen">
       {/* Hero Section */}
       <section className="relative bg-gradient-to-br from-pink-50 via-white to-purple-50 overflow-hidden">
@@ -355,5 +357,7 @@ export default function Home() {
         </div>
       </section>
     </div>
+
+    </Layout>
   );
 }

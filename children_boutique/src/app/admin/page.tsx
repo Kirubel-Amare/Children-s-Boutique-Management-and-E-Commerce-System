@@ -3,12 +3,14 @@
 
 import { useEffect, useState } from 'react';
 import { getProducts, } from '@/lib/products';
+import { useAuth } from '@/hooks/useAuth';
 import { getNotifications } from '@/lib/notifications';
 import { getSales, SaleWithDetails } from '@/lib/sales';
 import { Product } from '@/types';
 import { Notification } from '@/lib/notifications';
 import SidebarLayout from '@/components/layout/SidebarLayout';
 import ProtectedRoute from '@/components/auth/ProtectedRoute';
+
 import Link from 'next/link';
 import { 
   ChartBarIcon, 
@@ -20,11 +22,14 @@ import {
   ArrowDownIcon
 } from '@heroicons/react/24/outline';
 
+
+
 export default function AdminPage() {
   const [products, setProducts] = useState<Product[]>([]);
   const [sales, setSales] = useState<SaleWithDetails[]>([]);
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [loading, setLoading] = useState(true);
+
   const [users, setUsers] = useState([
     { id: '1', name: 'Admin User', email: 'admin@boutique.com', role: 'ADMIN', status: 'active' },
     { id: '2', name: 'Teller User', email: 'teller@boutique.com', role: 'TELLER', status: 'active' },
@@ -105,8 +110,11 @@ export default function AdminPage() {
     return (
       <ProtectedRoute requiredRole="ADMIN">
         <SidebarLayout>
+          
           <div className="flex justify-center items-center h-64">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-pink-600"></div>
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-pink-600">
+                    
+            </div>
           </div>
         </SidebarLayout>
       </ProtectedRoute>
@@ -118,8 +126,10 @@ export default function AdminPage() {
       <SidebarLayout>
         <div className="space-y-6">
           {/* Admin Welcome Banner */}
+          
           <div className="bg-gradient-to-r from-purple-500 to-indigo-600 rounded-xl shadow-sm p-6 text-white">
             <div className="flex items-center justify-between">
+              
               <div>
                 <h1 className="text-2xl font-bold mb-2">Admin Dashboard 👑</h1>
                 <p className="opacity-90">Complete system overview and management controls</p>

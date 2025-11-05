@@ -5,6 +5,7 @@ import { useState, useEffect } from 'react';
 import { Product } from '@/types';
 import { getProducts } from '@/lib/products';
 import ProductCard from '@/components/products/ProductCard';
+import Layout from '@/components/layout/Layout';
 
 const categories = ['all', 'clothes', 'shoes', 'accessories'];
 const sortOptions = [
@@ -101,6 +102,7 @@ export default function ProductsPage() {
   ].filter(Boolean).length;
 
   return (
+    <Layout>
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-gray-900 mb-2">
@@ -248,5 +250,6 @@ export default function ProductsPage() {
         </>
       )}
     </div>
+    </Layout>
   );
 }

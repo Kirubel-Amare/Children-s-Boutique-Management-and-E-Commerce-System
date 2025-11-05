@@ -38,23 +38,12 @@ export default function Header() {
               <Link href="/contact" className="text-gray-700 hover:text-pink-600 font-medium transition-colors">
                 Contact
               </Link>
-
-              {isAuthenticated ? (
-                <>
-                 
-                  {user?.role === 'ADMIN' && (
-                    <Link href="/admin" className="text-gray-700 hover:text-pink-600 font-medium transition-colors">
-                      Admin
-                    </Link>
-                  )}
-
-                  <NotificationBell />
-
-                  <span className="text-sm text-gray-500 bg-gray-100 px-3 py-1 rounded-full">
-                    {user?.name} ({user?.role})
-                  </span>
-                </>
-              ) : (
+              {user?.role === 'ADMIN' && (
+                <Link href="/admin" className="text-gray-700 hover:text-pink-600 font-medium transition-colors">
+                  Admin
+                </Link>
+              )}
+              {!isAuthenticated && (
                 <Link
                   href="/auth/signin"
                   className="bg-pink-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-pink-700 transition-colors shadow-sm hover:shadow-md"

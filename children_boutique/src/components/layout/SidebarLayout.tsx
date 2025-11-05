@@ -6,17 +6,18 @@ import { useAuth } from '@/hooks/useAuth';
 import { signOut } from 'next-auth/react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { 
-  HomeIcon, 
-  ShoppingBagIcon, 
-  ChartBarIcon, 
-  UserGroupIcon, 
-  CogIcon, 
+import NotificationBell from '@/components/notifications/NotificationBell';
+import {
+  HomeIcon,
+  ShoppingBagIcon,
+  ChartBarIcon,
+  UserGroupIcon,
+  CogIcon,
   XMarkIcon,
   Bars3Icon,
   ShoppingCartIcon
 } from '@heroicons/react/24/outline';
-  
+
 interface SidebarLayoutProps {
   children: React.ReactNode;
 }
@@ -35,10 +36,11 @@ const navigation = [
 
 export default function SidebarLayout({ children }: SidebarLayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const { user } = useAuth();
+  const { isAuthenticated, user } = useAuth();
+
   const pathname = usePathname();
 
-  const filteredNavigation = navigation.filter(item => 
+  const filteredNavigation = navigation.filter(item =>
     item.role.includes(user?.role as any)
   );
 
@@ -50,7 +52,7 @@ export default function SidebarLayout({ children }: SidebarLayoutProps) {
     <div className="flex h-screen bg-gray-50">
       {/* Mobile sidebar backdrop */}
       {sidebarOpen && (
-        <div 
+        <div
           className="fixed inset-0 flex z-40 lg:hidden"
           onClick={() => setSidebarOpen(false)}
         >
@@ -59,9 +61,8 @@ export default function SidebarLayout({ children }: SidebarLayoutProps) {
       )}
 
       {/* Mobile sidebar */}
-      <div className={`fixed inset-y-0 left-0 flex flex-col w-64 bg-gray-800 transform transition-transform duration-300 ease-in-out z-50 lg:hidden ${
-        sidebarOpen ? 'translate-x-0' : '-translate-x-full'
-      }`}>
+      <div className={`fixed inset-y-0 left-0 flex flex-col w-64 bg-gray-800 transform transition-transform duration-300 ease-in-out z-50 lg:hidden ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'
+        }`}>
         <div className="flex items-center justify-between h-16 px-4 bg-gray-900">
           <span className="text-white text-xl font-bold">Boutique Admin</span>
           <button
@@ -71,7 +72,7 @@ export default function SidebarLayout({ children }: SidebarLayoutProps) {
             <XMarkIcon className="h-6 w-6" />
           </button>
         </div>
-        
+
         <div className="flex-1 flex flex-col overflow-y-auto">
           <nav className="flex-1 px-4 py-4 space-y-2">
             {filteredNavigation.map((item) => {
@@ -80,16 +81,14 @@ export default function SidebarLayout({ children }: SidebarLayoutProps) {
                 <Link
                   key={item.name}
                   href={item.href}
-                  className={`group flex items-center px-3 py-3 text-sm font-medium rounded-lg transition-colors ${
-                    isActive
+                  className={`group flex items-center px-3 py-3 text-sm font-medium rounded-lg transition-colors ${isActive
                       ? 'bg-pink-600 text-white'
                       : 'text-gray-300 hover:bg-gray-700 hover:text-white'
-                  }`}
+                    }`}
                   onClick={() => setSidebarOpen(false)}
                 >
-                  <item.icon className={`mr-3 flex-shrink-0 h-5 w-5 ${
-                    isActive ? 'text-white' : 'text-gray-400 group-hover:text-white'
-                  }`} />
+                  <item.icon className={`mr-3 flex-shrink-0 h-5 w-5 ${isActive ? 'text-white' : 'text-gray-400 group-hover:text-white'
+                    }`} />
                   {item.name}
                 </Link>
               );
@@ -105,7 +104,7 @@ export default function SidebarLayout({ children }: SidebarLayoutProps) {
             <div className="flex items-center h-16 px-4 bg-gray-900">
               <span className="text-white text-xl font-bold">Boutique Admin</span>
             </div>
-            
+
             <div className="flex-1 flex flex-col overflow-y-auto">
               <nav className="flex-1 px-4 py-4 space-y-2">
                 {filteredNavigation.map((item) => {
@@ -114,15 +113,13 @@ export default function SidebarLayout({ children }: SidebarLayoutProps) {
                     <Link
                       key={item.name}
                       href={item.href}
-                      className={`group flex items-center px-3 py-3 text-sm font-medium rounded-lg transition-colors ${
-                        isActive
+                      className={`group flex items-center px-3 py-3 text-sm font-medium rounded-lg transition-colors ${isActive
                           ? 'bg-pink-600 text-white'
                           : 'text-gray-300 hover:bg-gray-700 hover:text-white'
-                      }`}
+                        }`}
                     >
-                      <item.icon className={`mr-3 flex-shrink-0 h-5 w-5 ${
-                        isActive ? 'text-white' : 'text-gray-400 group-hover:text-white'
-                      }`} />
+                      <item.icon className={`mr-3 flex-shrink-0 h-5 w-5 ${isActive ? 'text-white' : 'text-gray-400 group-hover:text-white'
+                        }`} />
                       {item.name}
                     </Link>
                   );
@@ -181,12 +178,15 @@ export default function SidebarLayout({ children }: SidebarLayoutProps) {
                 </h1>
               </div>
             </div>
-            
+
+
             <div className="flex items-center space-x-4">
+              {isAuthenticated && (<> <NotificationBell /></>)}
+
               <div className="text-sm text-gray-500">
                 Welcome back, <span className="font-medium text-gray-900">{user?.name}</span>
               </div>
-              
+
               {/* Mobile sign out button */}
               <button
                 onClick={handleSignOut}

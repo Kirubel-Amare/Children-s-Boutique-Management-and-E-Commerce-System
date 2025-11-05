@@ -4,6 +4,7 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { CheckCircleIcon, TruckIcon, EnvelopeIcon } from '@heroicons/react/24/outline';
+import Layout from '@/components/layout/Layout';
 
 export default function OrderSuccessPage() {
   const [orderNumber, setOrderNumber] = useState('');
@@ -24,6 +25,7 @@ export default function OrderSuccessPage() {
   }, []);
 
   return (
+    <Layout>
     <div className="min-h-screen bg-gray-50 py-12">
       <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Success Header */}
@@ -100,5 +102,6 @@ export default function OrderSuccessPage() {
         </div>
       </div>
     </div>
+    </Layout>
   );
 }

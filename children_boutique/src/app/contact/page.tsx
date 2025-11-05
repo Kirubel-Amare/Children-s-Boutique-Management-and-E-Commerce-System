@@ -3,6 +3,7 @@
 
 import { useState } from 'react';
 import { PhoneIcon, EnvelopeIcon, MapPinIcon } from '@heroicons/react/24/outline';
+import Layout from '@/components/layout/Layout';
 
 export default function ContactPage() {
   const [formData, setFormData] = useState({
@@ -18,6 +19,7 @@ export default function ContactPage() {
   };
 
   return (
+  <Layout>
     <div className="min-h-screen bg-white">
       {/* Hero Section */}
       <section className="bg-gradient-to-br from-pink-50 to-purple-50 py-20">
@@ -153,5 +155,6 @@ export default function ContactPage() {
         </div>
       </section>
     </div>
+    </Layout>
   );
 }
