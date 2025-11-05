@@ -78,7 +78,7 @@ export default function ProductPerformance({ sales, products }: ProductPerforman
             <h4 className="text-sm font-medium text-gray-900 mb-3">Product Details</h4>
             <div className="space-y-2">
               {productPerformance.map((product, index) => (
-                <div key={product.name} className="flex items-center justify-between p-2 bg-gray-50 rounded">
+                <div key={`${product.name}-${index}`} className="flex items-center justify-between p-2 bg-gray-50 rounded">
                   <div className="flex items-center">
                     <div 
                       className="w-3 h-3 rounded-full mr-2" 

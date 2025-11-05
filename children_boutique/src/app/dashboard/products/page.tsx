@@ -4,7 +4,6 @@
 import { useEffect, useState } from 'react';
 import { Product } from '@/types';
 import { getProducts, deleteProduct } from '@/lib/products';
-import DashboardLayout from '@/components/layout/DashboardLayout';
 import ProtectedRoute from '@/components/auth/ProtectedRoute';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';

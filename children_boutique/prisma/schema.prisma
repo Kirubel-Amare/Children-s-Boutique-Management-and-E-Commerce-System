@@ -16,10 +16,10 @@ model User {
   name      String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  
-  sales Sale[]
+
+  sales         Sale[]
   notifications Notification[]
-  
+
   @@map("users")
 }
 
@@ -35,10 +35,11 @@ model Product {
   imageUrl    String?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
-  
-  sales Sale[]
+
+  sales         Sale[]
   notifications Notification[]
-  
+  orderItems    OrderItem[]
+
   @@map("products")
 }
 
@@ -49,10 +50,10 @@ model Sale {
   total     Float
   tellerId  String
   createdAt DateTime @default(now())
-  
+
   product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
   teller  User    @relation(fields: [tellerId], references: [id], onDelete: Cascade)
-  
+
   @@map("sales")
 }
 
@@ -60,9 +61,10 @@ enum UserRole {
   ADMIN
   TELLER
 }
+
 model Notification {
   id        String   @id @default(cuid())
-  type      String   // 'low_stock', 'sale', 'system'
+  type      String // 'low_stock', 'sale', 'system'
   title     String
   message   String
   isRead    Boolean  @default(false)
@@ -75,4 +77,46 @@ model Notification {
   user    User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("notifications")
+}
+
+// Add to your existing schema
+// prisma/schema.prisma
+model Order {
+  id              String    @id @default(cuid())
+  customerName    String
+  customerEmail   String
+  customerPhone   String?
+  shippingAddress Json? // Since you're using an object
+  paymentMethod   String
+  subtotal        Float
+  shippingFee     Float
+  tax             Float
+  total           Float
+  status          String    @default("pending")
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  orderItems      OrderItem[]
+
+  @@map("orders")
+}
+
+model OrderItem {
+  id        String  @id @default(cuid())
+  orderId   String
+  productId String
+  quantity  Int
+  price     Float
+  order     Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product   Product @relation(fields: [productId], references: [id])
+
+  @@map("order_items")
+}
+
+
+enum OrderStatus {
+  PENDING
+  CONFIRMED
+  SHIPPED
+  DELIVERED
+  CANCELLED
 }

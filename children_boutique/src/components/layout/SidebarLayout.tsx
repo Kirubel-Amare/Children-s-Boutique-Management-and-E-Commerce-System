@@ -16,7 +16,7 @@ import {
   Bars3Icon,
   ShoppingCartIcon
 } from '@heroicons/react/24/outline';
-
+  
 interface SidebarLayoutProps {
   children: React.ReactNode;
 }
@@ -27,6 +27,10 @@ const navigation = [
   { name: 'Sales', href: '/dashboard/sales', icon: ShoppingCartIcon, role: ['ADMIN', 'TELLER'] },
   { name: 'Reports', href: '/dashboard/reports', icon: ChartBarIcon, role: ['ADMIN', 'TELLER'] },
   { name: 'User Management', href: '/admin/users', icon: UserGroupIcon, role: ['ADMIN'] },
+  { name: 'Settings', href: '/admin/settings', icon: CogIcon, role: ['ADMIN'] },
+  { name: 'Home', href: '/', icon: HomeIcon, role: ['ADMIN', 'TELLER'] },
+  { name: 'Orders', href: '/dashboard/orders', icon: ShoppingBagIcon, role: ['ADMIN', 'TELLER'] },
+
 ];
 
 export default function SidebarLayout({ children }: SidebarLayoutProps) {
