@@ -6,7 +6,7 @@ import SidebarLayout from '@/components/layout/SidebarLayout';
 
 export default function NewProductPage() {
   return (
-    <ProtectedRoute requiredRole="ADMIN">
+    <ProtectedRoute requiredRole={['ADMIN', 'TELLER']}>
       <SidebarLayout>
         <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
           <div className="px-4 py-6 sm:px-0">

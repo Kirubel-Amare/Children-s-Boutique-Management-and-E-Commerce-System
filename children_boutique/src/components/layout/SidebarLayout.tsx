@@ -29,8 +29,8 @@ const navigation = [
   { name: 'Sales', href: '/dashboard/sales', icon: ShoppingCartIcon, role: ['ADMIN', 'TELLER'] },
   { name: 'User Management', href: '/admin/users', icon: UserGroupIcon, role: ['ADMIN'] },
   { name: 'Orders', href: '/dashboard/orders', icon: ShoppingBagIcon, role: ['ADMIN', 'TELLER'] },
-  { name: 'Reports', href: '/dashboard/reports', icon: ChartBarIcon, role: ['ADMIN', 'TELLER'] },
-  { name: 'Settings', href: '/admin/settings', icon: CogIcon, role: ['ADMIN'] },
+  { name: 'Reports', href: '/dashboard/reports', icon: ChartBarIcon, role: ['ADMIN'] },
+  { name: 'Settings', href: '/settings', icon: CogIcon, role: ['ADMIN','TELLER'] },
 
 ];
 

@@ -7,7 +7,7 @@ import { useEffect } from 'react';
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
-  requiredRole?: 'ADMIN' | 'TELLER';
+  requiredRole?: 'ADMIN' | 'TELLER' | Array<'ADMIN' | 'TELLER'>;
 }
 
 export default function ProtectedRoute({ 
@@ -23,9 +23,12 @@ export default function ProtectedRoute({
       return;
     }
 
-    if (!isLoading && isAuthenticated && requiredRole && user?.role !== requiredRole) {
-      router.push('/dashboard');
-      return;
+    if (!isLoading && isAuthenticated && requiredRole) {
+      const roles = Array.isArray(requiredRole) ? requiredRole : [requiredRole];
+      if (!roles.includes(user?.role as 'ADMIN' | 'TELLER')) {
+        router.push('/dashboard');
+        return;
+      }
     }
   }, [isAuthenticated, isLoading, router, requiredRole, user]);
 
@@ -37,12 +40,11 @@ export default function ProtectedRoute({
     );
   }
 
-  if (!isAuthenticated) {
-    return null;
-  }
+  if (!isAuthenticated) return null;
 
-  if (requiredRole && user?.role !== requiredRole) {
-    return null;
+  if (requiredRole) {
+    const roles = Array.isArray(requiredRole) ? requiredRole : [requiredRole];
+    if (!roles.includes(user?.role as 'ADMIN' | 'TELLER')) return null;
   }
 
   return <>{children}</>;

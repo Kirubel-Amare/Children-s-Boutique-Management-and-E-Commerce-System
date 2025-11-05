@@ -43,6 +43,11 @@ export default function Header() {
                   Admin
                 </Link>
               )}
+               {user?.role === 'TELLER' && (
+                <Link href="/dashboard" className="text-gray-700 hover:text-pink-600 font-medium transition-colors">
+                  Teller
+                </Link>
+              )}
               {!isAuthenticated && (
                 <Link
                   href="/auth/signin"
