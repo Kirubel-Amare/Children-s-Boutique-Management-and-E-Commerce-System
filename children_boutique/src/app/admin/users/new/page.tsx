@@ -25,26 +25,37 @@ export default function NewUserPage() {
     }));
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    setError('');
+ 
 
-    try {
-      // In a real app, you would call your API here
-      console.log('Creating user:', formData);
-      
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      router.push('/admin/users');
-      router.refresh();
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to create user');
-    } finally {
-      setLoading(false);
+   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+  event.preventDefault();
+  setLoading(true);
+  setError('');
+
+  try {
+    // Call your API endpoint to create a user
+    const response = await fetch('/api/users', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(formData), // formData contains your user data
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || 'Failed to create user');
     }
-  };
+
+    // Success: navigate to the users page
+    router.push('/admin/users');
+    router.refresh();
+  } catch (err) {
+    setError(err instanceof Error ? err.message : 'Failed to create user');
+  } finally {
+    setLoading(false);
+  }
+};
 
   return (
     <ProtectedRoute requiredRole="ADMIN">

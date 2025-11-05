@@ -1,5 +1,5 @@
 // prisma/seed.ts
-import { PrismaClient } from '@prisma/client'
+import { PrismaClient, UserRole } from '@prisma/client'
 import bcrypt from 'bcryptjs'
 
 const prisma = new PrismaClient()
@@ -15,7 +15,8 @@ async function main() {
       email: 'admin@boutique.com',
       password: hashedPassword,
       name: 'Admin User',
-      role: 'ADMIN',
+      role: UserRole.ADMIN,   // ✅ Use enum
+      status: 'active',       // ✅ Add status
     },
   })
 
@@ -27,11 +28,12 @@ async function main() {
       email: 'teller@boutique.com',
       password: hashedPassword,
       name: 'Teller User',
-      role: 'TELLER',
+      role: UserRole.TELLER,  // ✅ Use enum
+      status: 'active',       // ✅ Add status
     },
   })
 
-  // Create sample products
+  // Sample products
   await prisma.product.createMany({
     data: [
       {

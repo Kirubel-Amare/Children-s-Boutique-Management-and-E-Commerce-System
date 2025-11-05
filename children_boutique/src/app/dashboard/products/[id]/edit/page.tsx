@@ -1,9 +1,9 @@
 // src/app/dashboard/products/[id]/edit/page.tsx
 import { getProduct } from '@/lib/products';
-import DashboardLayout from '@/components/layout/DashboardLayout';
 import ProtectedRoute from '@/components/auth/ProtectedRoute';
 import ProductForm from '@/components/forms/ProductForm';
 import { notFound } from 'next/navigation';
+import SidebarLayout from '@/components/layout/SidebarLayout';
 
 interface EditProductPageProps {
   params: Promise<{
@@ -21,13 +21,13 @@ export default async function EditProductPage({ params }: EditProductPageProps) 
 
   return (
     <ProtectedRoute requiredRole="ADMIN">
-      <DashboardLayout>
+      <SidebarLayout>
         <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
           <div className="px-4 py-6 sm:px-0">
             <ProductForm product={product} mode="edit" />
           </div>
         </div>
-      </DashboardLayout>
+      </SidebarLayout>
     </ProtectedRoute>
   );
 }
