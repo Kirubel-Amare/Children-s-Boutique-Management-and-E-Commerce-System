@@ -88,7 +88,7 @@ export default function ReportsPage() {
                   <h1 className="text-2xl font-bold text-gray-900 mb-2">Sales Reports</h1>
                   <p className="text-gray-600">Detailed analytics and performance metrics</p>
                 </div>
-                <div className="flex space-x-2">
+                <div className="flex space-x-2 text-gray-700">
                   <select
                     value={timeRange}
                     onChange={(e) => setTimeRange(e.target.value as any)}

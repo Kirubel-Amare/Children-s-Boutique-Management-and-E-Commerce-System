@@ -153,21 +153,21 @@ export default function Dashboard() {
                     className="flex items-center p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
                   >
                     <span className="text-pink-600 font-bold mr-3">+</span>
-                    <span>Add New Product</span>
+                    <span className='text-gray-600 font-bold mr-3'>Add New Product</span>
                   </Link>
                   <Link
                     href="/dashboard/sales"
                     className="flex items-center p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
                   >
                     <span className="text-green-600 font-bold mr-3">💰</span>
-                    <span>Record Sale</span>
+                    <span className='text-gray-600 font-bold mr-3'>Record Sale</span>
                   </Link>
                   <Link
                     href="/dashboard/products"
                     className="flex items-center p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
                   >
                     <span className="text-blue-600 font-bold mr-3">📊</span>
-                    <span>View Products</span>
+                    <span className='text-gray-600 font-bold mr-3'>View Products</span>
                   </Link>
                   {lowStockProducts > 0 && (
                     <Link

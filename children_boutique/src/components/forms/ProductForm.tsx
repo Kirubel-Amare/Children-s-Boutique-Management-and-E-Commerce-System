@@ -86,7 +86,7 @@ export default function ProductForm({ product, mode }: ProductFormProps) {
               required
               value={formData.name}
               onChange={handleChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-pink-500"
+              className="block w-full pl-3 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-pink-500 bg-white text-gray-900 placeholder-gray-500 transition-colors"
               placeholder="Enter product name"
             />
           </div>
@@ -101,7 +101,7 @@ export default function ProductForm({ product, mode }: ProductFormProps) {
               rows={3}
               value={formData.description || ''}
               onChange={handleChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-pink-500"
+              className="block w-full pl-3 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-pink-500 bg-white text-gray-900 placeholder-gray-500 transition-colors"
               placeholder="Enter product description"
             />
           </div>
@@ -120,7 +120,7 @@ export default function ProductForm({ product, mode }: ProductFormProps) {
                 step="0.01"
                 value={formData.price}
                 onChange={handleChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-pink-500"
+                className="block w-full pl-3 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-pink-500 bg-white text-gray-900 placeholder-gray-500 transition-colors"
                 placeholder="0.00"
               />
             </div>
@@ -137,7 +137,7 @@ export default function ProductForm({ product, mode }: ProductFormProps) {
                 min="0"
                 value={formData.quantity}
                 onChange={handleChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-pink-500"
+                className="block w-full pl-3 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-pink-500 bg-white text-gray-900 placeholder-gray-500 transition-colors"
                 placeholder="0"
               />
             </div>
@@ -154,7 +154,7 @@ export default function ProductForm({ product, mode }: ProductFormProps) {
                 required
                 value={formData.category}
                 onChange={handleChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-pink-500"
+                className="block w-full pl-3 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-pink-500 bg-white text-gray-900 placeholder-gray-500 transition-colors"
               >
                 {categories.map(category => (
                   <option key={category} value={category}>
@@ -173,7 +173,7 @@ export default function ProductForm({ product, mode }: ProductFormProps) {
                 name="size"
                 value={formData.size || ''}
                 onChange={handleChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-pink-500"
+                className="block w-full pl-3 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-pink-500 bg-white text-gray-900 placeholder-gray-500 transition-colors"
               >
                 <option value="">Select size</option>
                 {sizes.map(size => (
@@ -193,7 +193,7 @@ export default function ProductForm({ product, mode }: ProductFormProps) {
               name="color"
               value={formData.color || ''}
               onChange={handleChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-pink-500"
+              className="block w-full pl-3 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-pink-500 bg-white text-gray-900 placeholder-gray-500 transition-colors"
               placeholder="Enter color"
             />
           </div>
@@ -208,7 +208,7 @@ export default function ProductForm({ product, mode }: ProductFormProps) {
               name="imageUrl"
               value={formData.imageUrl || ''}
               onChange={handleChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-pink-500"
+              className="block w-full pl-3 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-pink-500 bg-white text-gray-900 placeholder-gray-500 transition-colors"
               placeholder="https://example.com/image.jpg"
             />
           </div>

@@ -24,6 +24,7 @@ interface SidebarLayoutProps {
 
 const navigation = [
   { name: 'Admin Dashboard', href: '/admin', icon: CogIcon, role: ['ADMIN'] },
+  {name: 'Dashboard', href: '/dashboard', icon: HomeIcon, role: ['TELLER'] },
   { name: 'Home', href: '/', icon: HomeIcon, role: ['ADMIN', 'TELLER'] },
   { name: 'Products', href: '/dashboard/products', icon: ShoppingBagIcon, role: ['ADMIN', 'TELLER'] },
   { name: 'Sales', href: '/dashboard/sales', icon: ShoppingCartIcon, role: ['ADMIN', 'TELLER'] },

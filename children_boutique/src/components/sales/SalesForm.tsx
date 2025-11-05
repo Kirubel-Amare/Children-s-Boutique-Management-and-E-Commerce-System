@@ -104,23 +104,23 @@ export default function SalesForm() {
             <h4 className="font-medium text-gray-900 mb-2">Product Details</h4>
             <div className="grid grid-cols-2 gap-4 text-sm">
               <div>
-                <span className="text-gray-600">Price:</span>
-                <span className="ml-2 font-medium">${selectedProduct.price}</span>
+                <span className="text-gray-900">Price:</span>
+                <span className="ml-2 font-medium text-gray-900">${selectedProduct.price}</span>
               </div>
               <div>
-                <span className="text-gray-600">Available:</span>
-                <span className="ml-2 font-medium">{selectedProduct.quantity}</span>
+                <span className="text-gray-900">Available:</span>
+                <span className="ml-2 font-medium text-gray-900">{selectedProduct.quantity}</span>
               </div>
               {selectedProduct.size && (
                 <div>
-                  <span className="text-gray-600">Size:</span>
-                  <span className="ml-2 font-medium">{selectedProduct.size}</span>
+                  <span className="text-gray-900">Size:</span>
+                  <span className="ml-2 font-medium text-gray-900">{selectedProduct.size}</span>
                 </div>
               )}
               {selectedProduct.color && (
                 <div>
-                  <span className="text-gray-600">Color:</span>
-                  <span className="ml-2 font-medium">{selectedProduct.color}</span>
+                  <span className="text-gray-900">Color:</span>
+                  <span className="ml-2 font-medium text-gray-900">{selectedProduct.color}</span>
                 </div>
               )}
             </div>
