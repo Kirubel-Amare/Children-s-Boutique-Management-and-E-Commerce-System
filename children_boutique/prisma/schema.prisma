@@ -19,9 +19,9 @@ enum UserStatus {
 
 enum OrderStatus {
   PENDING
-  CONFIRMED
-  SHIPPED
-  DELIVERED
+  APPROVED
+  REJECTED
+  COMPLETED
   CANCELLED
 }
 
@@ -40,7 +40,7 @@ model User {
 
   createdAt        DateTime       @default(now())
   updatedAt        DateTime       @updatedAt
-
+  
   // Relations
   sales            Sale[]         @relation("UserSales")
   notifications    Notification[] @relation("UserNotifications")
@@ -99,35 +99,39 @@ model Notification {
 
   @@map("notifications")
 }
-
 model Order {
-  id              String       @id @default(cuid())
-  customerName    String
-  customerEmail   String
-  customerPhone   String?
-  shippingAddress Json?
-  paymentMethod   String
-  subtotal        Float
-  shippingFee     Float
-  tax             Float
-  total           Float
-  status          OrderStatus  @default(PENDING)
-  createdAt       DateTime     @default(now())
-  updatedAt       DateTime     @updatedAt
-  orderItems      OrderItem[]
+  id          String   @id @default(cuid())
+  orderNumber String   @unique
+  customerName String
+  customerEmail String
+  customerPhone String?
+  shippingAddress Json
+  paymentMethod String
+  subtotal     Float
+  shippingFee  Float
+  tax          Float
+  total        Float
+  status      OrderStatus @default(PENDING) // Add this
+  adminNotes  String?     // Add this for admin comments
+  approvedBy  String?     // Add this
+  approvedAt  DateTime?   // Add this
+  orderItems OrderItem[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
   @@map("orders")
 }
-
 model OrderItem {
-  id        String  @id @default(cuid())
-  orderId   String
-  productId String
-  quantity  Int
-  price     Float
-
-  order     Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
-  product   Product @relation(fields: [productId], references: [id])
+  id          String   @id @default(cuid())
+  orderId     String
+  order       Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productId   String
+  product     Product  @relation(fields: [productId], references: [id])
+  productName String   // Add this line - make it required or String? if optional
+  quantity    Int
+  price       Float
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
   @@map("order_items")
 }

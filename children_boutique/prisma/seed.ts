@@ -7,7 +7,7 @@ const prisma = new PrismaClient()
 async function main() {
   const hashedPassword = await bcrypt.hash('password', 12)
 
-  // Create admin user
+  // Upsert admin user
   await prisma.user.upsert({
     where: { email: 'admin@boutique.com' },
     update: {},
@@ -15,12 +15,13 @@ async function main() {
       email: 'admin@boutique.com',
       password: hashedPassword,
       name: 'Admin User',
-      role: UserRole.ADMIN,   // ✅ Use enum
-      status: 'active',       // ✅ Add status
+      role: UserRole.ADMIN,
+      status: 'active',
+      isEmailVerified: true,
     },
   })
 
-  // Create teller user
+  // Upsert teller user
   await prisma.user.upsert({
     where: { email: 'teller@boutique.com' },
     update: {},
@@ -28,8 +29,9 @@ async function main() {
       email: 'teller@boutique.com',
       password: hashedPassword,
       name: 'Teller User',
-      role: UserRole.TELLER,  // ✅ Use enum
-      status: 'active',       // ✅ Add status
+      role: UserRole.TELLER,
+      status: 'active',
+      isEmailVerified: true,
     },
   })
 
@@ -66,11 +68,13 @@ async function main() {
     ],
     skipDuplicates: true,
   })
+
+  console.log('✅ Seed completed successfully')
 }
 
 main()
   .catch((e) => {
-    console.error(e)
+    console.error('❌ Seed failed:', e)
     process.exit(1)
   })
   .finally(async () => {

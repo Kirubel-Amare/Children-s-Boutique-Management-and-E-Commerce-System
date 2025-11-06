@@ -1,7 +1,7 @@
 // app/api/auth/otp/route.ts
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/db';
-import { sendEmail, generateOTP, generateOTPEmail } from '@/lib/emailService';
+import { sendEmail, generateOTP, generateOTPEmail } from '@/lib/email';
 
 // Send OTP
 export async function POST(req: NextRequest) {

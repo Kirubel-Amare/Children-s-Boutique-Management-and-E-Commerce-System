@@ -4,7 +4,7 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/db';
 import bcrypt from 'bcryptjs';
-import { sendEmail, generateOTP, generateOTPEmail } from '@/lib/emailService';
+import { sendEmail, generateOTP, generateOTPEmail } from '@/lib/email';
 
 // Get current user settings
 export async function GET(req: NextRequest) {
