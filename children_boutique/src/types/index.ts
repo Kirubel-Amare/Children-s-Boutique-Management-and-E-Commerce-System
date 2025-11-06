@@ -36,13 +36,16 @@ export interface Product {
   updatedAt: Date;
 }
 
-export interface User {
+// src/types/index.ts
+export type User = {
   id: string;
-  email: string;
   name: string;
-  role: 'ADMIN' | 'TELLER';
-  createdAt: Date;
-}
+  email: string;
+  role: 'ADMIN' | 'TELLER' | 'USER';
+  status: 'active' | 'inactive';
+  createdAt: string; // or Date if you prefer
+  updatedAt?: string; // optional if needed
+};
 
 export interface Sale {
   id: string;
@@ -78,3 +81,4 @@ export interface Notification {
     quantity: number;
   };
 }
+
