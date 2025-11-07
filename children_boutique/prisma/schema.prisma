@@ -49,22 +49,28 @@ model User {
 }
 
 model Product {
-  id          String       @id @default(cuid())
-  name        String
-  description String?
-  price       Float
-  quantity    Int
-  category    String
-  size        String?
-  color       String?
-  imageUrl    String?
-  createdAt   DateTime     @default(now())
-  updatedAt   DateTime     @updatedAt
+  id             String       @id @default(cuid())
+  name           String
+  description    String?
+  
+  // ✅ NEW FIELDS for profit management
+  originalPrice  Float        
+  profitAmount   Float?       
+  profitPercent  Float?       
+  price          Float        
+  
+  quantity       Int
+  category       String
+  size           String?
+  color          String?
+  imageUrl       String?
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
 
   // Relations
-  sales         Sale[]
-  notifications Notification[]
-  orderItems    OrderItem[]
+  sales          Sale[]
+  notifications  Notification[]
+  orderItems     OrderItem[]
 
   @@map("products")
 }

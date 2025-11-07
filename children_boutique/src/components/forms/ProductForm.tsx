@@ -1,7 +1,6 @@
-// src/components/forms/ProductForm.tsx
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Product, ProductFormData } from '@/types';
 import { createProduct, updateProduct } from '@/lib/products';
 import { useRouter } from 'next/navigation';
@@ -18,11 +17,13 @@ export default function ProductForm({ product, mode }: ProductFormProps) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  
+
   const [formData, setFormData] = useState<ProductFormData>({
     name: product?.name || '',
     description: product?.description || '',
-    price: product?.price || 0,
+    originalPrice: product?.originalPrice || 0,
+    profit: product?.profit || 0,
+    price: product?.price || 0, // final price
     quantity: product?.quantity || 0,
     category: product?.category || 'clothes',
     size: product?.size || '',
@@ -30,11 +31,19 @@ export default function ProductForm({ product, mode }: ProductFormProps) {
     imageUrl: product?.imageUrl || '',
   });
 
+  // Automatically calculate final price when originalPrice or profit changes
+  useEffect(() => {
+    setFormData(prev => ({
+      ...prev,
+      price: prev.originalPrice + prev.profit,
+    }));
+  }, [formData.originalPrice, formData.profit]);
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({
       ...prev,
-      [name]: name === 'price' || name === 'quantity' ? Number(value) : value,
+      [name]: name === 'originalPrice' || name === 'profit' || name === 'quantity' ? Number(value) : value,
     }));
   };
 
@@ -49,7 +58,7 @@ export default function ProductForm({ product, mode }: ProductFormProps) {
       } else if (product) {
         await updateProduct(product.id, formData);
       }
-      
+
       router.push('/dashboard/products');
       router.refresh();
     } catch (err) {
@@ -106,25 +115,60 @@ export default function ProductForm({ product, mode }: ProductFormProps) {
             />
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div>
-              <label htmlFor="price" className="block text-sm font-medium text-gray-700 mb-1">
-                Price ($) *
+              <label htmlFor="originalPrice" className="block text-sm font-medium text-gray-700 mb-1">
+                Original Price ($) *
               </label>
               <input
                 type="number"
-                id="price"
-                name="price"
+                id="originalPrice"
+                name="originalPrice"
                 required
                 min="0"
                 step="0.01"
-                value={formData.price}
+                value={formData.originalPrice}
                 onChange={handleChange}
                 className="block w-full pl-3 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-pink-500 bg-white text-gray-900 placeholder-gray-500 transition-colors"
                 placeholder="0.00"
               />
             </div>
 
+            <div>
+              <label htmlFor="profit" className="block text-sm font-medium text-gray-700 mb-1">
+                Profit ($) *
+              </label>
+              <input
+                type="number"
+                id="profit"
+                name="profit"
+                required
+                min="0"
+                step="0.01"
+                value={formData.profit}
+                onChange={handleChange}
+                className="block w-full pl-3 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-pink-500 bg-white text-gray-900 placeholder-gray-500 transition-colors"
+                placeholder="0.00"
+              />
+            </div>
+
+            <div>
+              <label htmlFor="price" className="block text-sm font-medium text-gray-700 mb-1">
+                Final Price ($)
+              </label>
+              <input
+                type="number"
+                id="price"
+                name="price"
+                value={formData.price}
+                disabled
+                className="block w-full pl-3 pr-4 py-3 border border-gray-300 rounded-xl bg-gray-100 text-gray-900 placeholder-gray-500 transition-colors"
+                placeholder="0.00"
+              />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
               <label htmlFor="quantity" className="block text-sm font-medium text-gray-700 mb-1">
                 Quantity in Stock *
@@ -141,9 +185,7 @@ export default function ProductForm({ product, mode }: ProductFormProps) {
                 placeholder="0"
               />
             </div>
-          </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
               <label htmlFor="category" className="block text-sm font-medium text-gray-700 mb-1">
                 Category *
@@ -163,7 +205,9 @@ export default function ProductForm({ product, mode }: ProductFormProps) {
                 ))}
               </select>
             </div>
+          </div>
 
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
               <label htmlFor="size" className="block text-sm font-medium text-gray-700 mb-1">
                 Size
@@ -181,21 +225,21 @@ export default function ProductForm({ product, mode }: ProductFormProps) {
                 ))}
               </select>
             </div>
-          </div>
 
-          <div>
-            <label htmlFor="color" className="block text-sm font-medium text-gray-700 mb-1">
-              Color
-            </label>
-            <input
-              type="text"
-              id="color"
-              name="color"
-              value={formData.color || ''}
-              onChange={handleChange}
-              className="block w-full pl-3 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-pink-500 bg-white text-gray-900 placeholder-gray-500 transition-colors"
-              placeholder="Enter color"
-            />
+            <div>
+              <label htmlFor="color" className="block text-sm font-medium text-gray-700 mb-1">
+                Color
+              </label>
+              <input
+                type="text"
+                id="color"
+                name="color"
+                value={formData.color || ''}
+                onChange={handleChange}
+                className="block w-full pl-3 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-pink-500 bg-white text-gray-900 placeholder-gray-500 transition-colors"
+                placeholder="Enter color"
+              />
+            </div>
           </div>
 
           <div>

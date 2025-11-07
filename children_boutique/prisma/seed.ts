@@ -35,13 +35,16 @@ async function main() {
     },
   })
 
-  // Sample products
+  // Sample products with profit fields
   await prisma.product.createMany({
     data: [
       {
         name: 'Kids T-Shirt',
         description: 'Comfortable cotton t-shirt for kids',
-        price: 15.99,
+        originalPrice: 12,       // Original cost
+        profitPercent: 33,       // Profit % desired
+        profitAmount: 4,         // Calculated profit
+        price: 16,               // final selling price
         quantity: 20,
         category: 'clothes',
         size: 'M',
@@ -50,7 +53,10 @@ async function main() {
       {
         name: 'Children Sneakers',
         description: 'Durable sneakers for active kids',
-        price: 35.99,
+        originalPrice: 25,
+        profitPercent: 40,
+        profitAmount: 10,
+        price: 35,
         quantity: 15,
         category: 'shoes',
         size: '28',
@@ -59,7 +65,10 @@ async function main() {
       {
         name: 'Baby Romper',
         description: 'Adorable romper for babies',
-        price: 22.99,
+        originalPrice: 15,
+        profitPercent: 53,
+        profitAmount: 8,
+        price: 23,
         quantity: 8,
         category: 'clothes',
         size: '6M',

@@ -5,7 +5,7 @@ import type { Session } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/db';
 
-// GET - Fetch all products (public)
+// 🟢 GET - Fetch all products
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
@@ -28,30 +28,38 @@ export async function GET(request: NextRequest) {
   }
 }
 
+// 🟢 POST - Create new product (Admin only)
 export async function POST(request: NextRequest) {
   try {
     const session = (await getServerSession(authOptions as any)) as Session | null;
 
     if (!session || session.user?.role !== 'ADMIN') {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     const body = await request.json();
-    
+
+    // 🟡 Calculate profit and final selling price
+    const originalPrice = parseFloat(body.originalPrice);
+    const profitPercent = parseFloat(body.profitPercent);
+
+    const profitAmount = (originalPrice * profitPercent) / 100;
+    const sellingPrice = originalPrice + profitAmount;
+
+    // 🟢 Create product with profit fields
     const product = await prisma.product.create({
-      data: {
-        name: body.name,
-        description: body.description,
-        price: parseFloat(body.price),
-        quantity: parseInt(body.quantity),
-        category: body.category,
-        size: body.size,
-        color: body.color,
-        imageUrl: body.imageUrl,
-      }
+   data: {
+    name: body.name,
+    description: body.description,
+    category: body.category,
+    quantity: parseInt(body.quantity),
+    size: body.size,
+    color: body.color,
+    imageUrl: body.imageUrl,
+    originalPrice: parseFloat(body.originalPrice),
+    profitAmount: parseFloat(body.profit), // user manually enters
+    price: parseFloat(body.originalPrice) + parseFloat(body.profit),
+  },
     });
 
     return NextResponse.json(product);

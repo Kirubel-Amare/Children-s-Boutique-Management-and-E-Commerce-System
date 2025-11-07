@@ -1,8 +1,10 @@
 // src/lib/users.ts
 
-import { User } from "next-auth";
+import { User } from "@/types";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
+
+
 
 export async function getUsers(): Promise<User[]> {
   try {
