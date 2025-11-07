@@ -21,6 +21,23 @@ export interface CustomerInfo {
   country: string;
 }
 
+export interface Order {
+  id: string;
+  orderNumber: string;
+  customerName: string;
+  status: string;
+  total: number;
+  createdAt: string;
+  orderItems: Array<{
+    productName: string;
+    quantity: number;
+    price: number;
+    product: {
+      name: string;
+    };
+  }>;
+}
+
 export interface OrderData {
   customerInfo: CustomerInfo;
   items: OrderItem[];
@@ -77,3 +94,4 @@ export async function getOrders(): Promise<any[]> {
     throw error;
   }
 }
+

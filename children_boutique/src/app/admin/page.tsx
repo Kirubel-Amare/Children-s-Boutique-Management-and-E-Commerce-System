@@ -2,14 +2,15 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { getProducts, } from '@/lib/products';
-import { useAuth } from '@/hooks/useAuth';
+import { getProducts } from '@/lib/products';
 import { getNotifications } from '@/lib/notifications';
 import { getSales, SaleWithDetails } from '@/lib/sales';
 import { Product } from '@/types';
 import { Notification } from '@/lib/notifications';
 import SidebarLayout from '@/components/layout/SidebarLayout';
 import ProtectedRoute from '@/components/auth/ProtectedRoute';
+import { getUsers } from '@/lib/users';
+import { Order } from '@/types';
 
 import Link from 'next/link';
 import { 
@@ -19,21 +20,17 @@ import {
   ExclamationTriangleIcon,
   CheckCircleIcon,
   ArrowUpIcon,
-  ArrowDownIcon
+  ArrowDownIcon,
+  CurrencyDollarIcon
 } from '@heroicons/react/24/outline';
-
-
 
 export default function AdminPage() {
   const [products, setProducts] = useState<Product[]>([]);
   const [sales, setSales] = useState<SaleWithDetails[]>([]);
+  const [orders, setOrders] = useState<Order[]>([]);
   const [notifications, setNotifications] = useState<Notification[]>([]);
+  const [users, setUsers] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-
-  const [users, setUsers] = useState([
-    { id: '1', name: 'Admin User', email: 'admin@boutique.com', role: 'ADMIN', status: 'active' },
-    { id: '2', name: 'Teller User', email: 'teller@boutique.com', role: 'TELLER', status: 'active' },
-  ]);
 
   useEffect(() => {
     loadAdminData();
@@ -41,34 +38,144 @@ export default function AdminPage() {
 
   const loadAdminData = async () => {
     try {
-      const [productsData, salesData, notificationsData] = await Promise.all([
-        getProducts(),
-        getSales(),
-        getNotifications(),
+      setLoading(true);
+      
+      const [productsData, salesData, notificationsData, usersData, ordersData] = await Promise.all([
+        getProducts().catch(() => []),
+        getSales().catch(() => []),
+        getNotifications().catch(() => []),
+        getUsers().catch(() => []),
+        // Fetch completed orders
+        fetch('/api/orders?status=COMPLETED')
+          .then(res => res.ok ? res.json() : [])
+          .catch(() => [])
       ]);
 
-      setProducts(productsData);
-      setSales(salesData);
-      setNotifications(notificationsData);
+      setProducts(Array.isArray(productsData) ? productsData : []);
+      setSales(Array.isArray(salesData) ? salesData : []);
+      setNotifications(Array.isArray(notificationsData) ? notificationsData : []);
+      
+      // Handle users data
+      let usersArray = [];
+      if (usersData) {
+        if (Array.isArray(usersData.users)) {
+          usersArray = usersData.users;
+        } else if (Array.isArray(usersData)) {
+          usersArray = usersData;
+        }
+      }
+      setUsers(usersArray);
+
+      // Handle orders data
+      let ordersArray = [];
+      if (ordersData) {
+        if (Array.isArray(ordersData)) {
+          ordersArray = ordersData;
+        } else if (Array.isArray(ordersData.orders)) {
+          ordersArray = ordersData.orders;
+        }
+      }
+      setOrders(ordersArray);
+
     } catch (error) {
       console.error('Error loading admin data:', error);
+      setProducts([]);
+      setSales([]);
+      setNotifications([]);
+      setUsers([]);
+      setOrders([]);
     } finally {
       setLoading(false);
     }
   };
 
-  // Calculate admin-specific metrics
+  // Calculate profit for sales (assuming product has costPrice and sellingPrice)
+  const calculateSalesProfit = () => {
+  return sales.reduce((profit, sale) => {
+    // Use the stored profit from sale if available
+    if (sale.profit) {
+      return profit + sale.profit;
+    }
+    
+    // Fallback: calculate using product profitAmount
+    const product = products.find(p => p.id === sale.product.id);
+    if (product && product.profitAmount) {
+      return profit + (product.profitAmount * sale.quantity);
+    }
+    
+    // Final fallback: assume 60% profit margin
+    return profit + (sale.total * 0.6);
+  }, 0);
+};
+
+// Calculate profit for orders using product profitAmount
+const calculateOrdersProfit = () => {
+  return orders.reduce((profit, order) => {
+    return profit + order.orderItems.reduce((orderProfit, item) => {
+      const product = products.find(p => p.id === item.product?.id);
+      if (product && product.profitAmount) {
+        return orderProfit + (product.profitAmount * item.quantity);
+      }
+      
+      // If no profitAmount, calculate from price difference
+      if (product && product.originalPrice) {
+        const profitPerItem = item.price - product.originalPrice;
+        return orderProfit + (profitPerItem * item.quantity);
+      }
+      
+      // Final fallback: assume 60% profit margin
+      return orderProfit + (item.price * item.quantity * 0.6);
+    }, 0);
+  }, 0);
+};
+  // Calculate admin-specific metrics - include both sales and completed orders
   const totalProducts = products.length;
-  const totalSales = sales.length;
-  const totalRevenue = sales.reduce((sum, sale) => sum + sale.total, 0);
+  const totalInPersonSales = sales.length;
+  const totalCompletedOrders = orders.length;
+  const totalSales = totalInPersonSales + totalCompletedOrders;
+  
+  // Calculate total revenue from both sales and orders
+  const revenueFromSales = sales.reduce((sum, sale) => sum + (sale?.total || 0), 0);
+  const revenueFromOrders = orders.reduce((sum, order) => sum + (order?.total || 0), 0);
+  const totalRevenue = revenueFromSales + revenueFromOrders;
+  
+  // Calculate total profit
+  const profitFromSales = calculateSalesProfit();
+  const profitFromOrders = calculateOrdersProfit();
+  const totalProfit = profitFromSales + profitFromOrders;
+  
   const lowStockProducts = products.filter(p => p.quantity <= 5).length;
   const outOfStockProducts = products.filter(p => p.quantity === 0).length;
   const totalUsers = users.length;
   const unreadNotifications = notifications.filter(n => !n.isRead).length;
 
-  // Recent activities
-  const recentSales = sales.slice(0, 5);
-  const recentNotifications = notifications.slice(0, 5);
+  // Calculate profit margin percentage
+  const profitMargin = totalRevenue > 0 ? (totalProfit / totalRevenue) * 100 : 0;
+
+  // Combine sales and orders for recent activities
+  const allTransactions = [
+    ...sales.map(sale => ({
+      id: sale.id,
+      type: 'sale' as const,
+      product: sale.product,
+      total: sale.total,
+      quantity: sale.quantity,
+      createdAt: sale.createdAt,
+      customerName: sale.teller?.name || 'In-Store Customer',
+      orderNumber: `SALE-${sale.id.slice(-6)}`
+    })),
+    ...orders.map(order => ({
+      id: order.id,
+      type: 'order' as const,
+      product: { name: `${order.orderItems.length} items` },
+      total: order.total,
+      quantity: order.orderItems.reduce((sum, item) => sum + item.quantity, 0),
+      createdAt: order.createdAt,
+      customerName: order.customerName,
+      orderNumber: order.orderNumber
+    }))
+  ].sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+   .slice(0, 5);
 
   // Stats for the admin dashboard
   const stats = [
@@ -78,6 +185,14 @@ export default function AdminPage() {
       change: '12.5%',
       changeType: 'increase' as const,
       icon: ChartBarIcon,
+      color: 'blue',
+    },
+    {
+      name: 'Total Profit',
+      value: `$${totalProfit.toFixed(2)}`,
+      change: `${profitMargin.toFixed(1)}% margin`,
+      changeType: 'increase' as const,
+      icon: CurrencyDollarIcon,
       color: 'green',
     },
     {
@@ -86,7 +201,7 @@ export default function AdminPage() {
       change: '3.2%',
       changeType: 'increase' as const,
       icon: ShoppingBagIcon,
-      color: 'blue',
+      color: 'purple',
     },
     {
       name: 'System Users',
@@ -94,14 +209,6 @@ export default function AdminPage() {
       change: '0%',
       changeType: 'increase' as const,
       icon: UserGroupIcon,
-      color: 'purple',
-    },
-    {
-      name: 'Active Alerts',
-      value: unreadNotifications.toString(),
-      change: '8.1%',
-      changeType: 'increase' as const,
-      icon: ExclamationTriangleIcon,
       color: 'yellow',
     },
   ];
@@ -110,11 +217,8 @@ export default function AdminPage() {
     return (
       <ProtectedRoute requiredRole="ADMIN">
         <SidebarLayout>
-          
           <div className="flex justify-center items-center h-64">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-pink-600">
-                    
-            </div>
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-pink-600"></div>
           </div>
         </SidebarLayout>
       </ProtectedRoute>
@@ -126,10 +230,8 @@ export default function AdminPage() {
       <SidebarLayout>
         <div className="space-y-6">
           {/* Admin Welcome Banner */}
-          
           <div className="bg-gradient-to-r from-purple-500 to-indigo-600 rounded-xl shadow-sm p-6 text-white">
             <div className="flex items-center justify-between">
-              
               <div>
                 <h1 className="text-2xl font-bold mb-2">Admin Dashboard 👑</h1>
                 <p className="opacity-90">Complete system overview and management controls</p>
@@ -232,40 +334,57 @@ export default function AdminPage() {
 
           {/* Main Content Grid */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {/* Recent Sales */}
+            {/* Recent Sales & Orders */}
             <div className="bg-white shadow rounded-lg">
               <div className="px-4 py-5 sm:px-6 border-b border-gray-200">
                 <div className="flex justify-between items-center">
-                  <h3 className="text-lg leading-6 font-medium text-gray-900">Recent Sales</h3>
+                  <h3 className="text-lg leading-6 font-medium text-gray-900">Recent Transactions</h3>
                   <Link href="/dashboard/sales" className="text-purple-600 hover:text-purple-700 text-sm font-medium">
                     View All
                   </Link>
                 </div>
+                <p className="text-sm text-gray-500 mt-1">
+                  In-store sales and online orders
+                </p>
               </div>
               <div className="p-6">
-                {recentSales.length === 0 ? (
+                {allTransactions.length === 0 ? (
                   <div className="text-center py-8 text-gray-500">
                     <ShoppingBagIcon className="h-12 w-12 text-gray-400 mx-auto mb-3" />
-                    <p>No recent sales</p>
+                    <p>No recent transactions</p>
                   </div>
                 ) : (
                   <div className="space-y-4">
-                    {recentSales.map((sale) => (
-                      <div key={sale.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                    {allTransactions.map((transaction) => (
+                      <div key={transaction.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
                         <div className="flex items-center space-x-3">
-                          <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
-                            <span className="text-green-600 text-sm">💰</span>
+                          <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
+                            transaction.type === 'sale' ? 'bg-green-100' : 'bg-blue-100'
+                          }`}>
+                            <span className={`text-sm ${
+                              transaction.type === 'sale' ? 'text-green-600' : 'text-blue-600'
+                            }`}>
+                              {transaction.type === 'sale' ? '🛒' : '📦'}
+                            </span>
                           </div>
                           <div>
-                            <p className="font-medium text-gray-900">{sale.product.name}</p>
+                            <p className="font-medium text-gray-900">
+                              {transaction.type === 'sale' 
+                                ? transaction.product.name 
+                                : `${transaction.quantity} items`
+                              }
+                            </p>
                             <p className="text-sm text-gray-500">
-                              by {sale.teller.name} • {new Date(sale.createdAt).toLocaleDateString()}
+                              {transaction.customerName} • {new Date(transaction.createdAt).toLocaleDateString()}
+                            </p>
+                            <p className="text-xs text-gray-400">
+                              {transaction.orderNumber} • {transaction.type === 'sale' ? 'In-Store' : 'Online'}
                             </p>
                           </div>
                         </div>
                         <div className="text-right">
-                          <p className="font-semibold text-green-600">${sale.total.toFixed(2)}</p>
-                          <p className="text-sm text-gray-500">{sale.quantity} items</p>
+                          <p className="font-semibold text-green-600">${transaction.total.toFixed(2)}</p>
+                          <p className="text-sm text-gray-500">{transaction.quantity} items</p>
                         </div>
                       </div>
                     ))}
@@ -285,7 +404,7 @@ export default function AdminPage() {
                 </div>
               </div>
               <div className="p-6">
-                {recentNotifications.length === 0 ? (
+                {notifications.length === 0 ? (
                   <div className="text-center py-8 text-gray-500">
                     <CheckCircleIcon className="h-12 w-12 text-green-400 mx-auto mb-3" />
                     <p>No alerts at this time</p>
@@ -293,7 +412,7 @@ export default function AdminPage() {
                   </div>
                 ) : (
                   <div className="space-y-3">
-                    {recentNotifications.map((notification) => (
+                    {notifications.slice(0, 5).map((notification) => (
                       <div 
                         key={notification.id} 
                         className={`p-3 rounded-lg border-l-4 ${
@@ -390,12 +509,12 @@ export default function AdminPage() {
               </div>
               <div className="p-6">
                 <div className="space-y-3">
-                  {users.map((user) => (
+                  {users.slice(0, 3).map((user) => (
                     <div key={user.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
                       <div className="flex items-center space-x-3">
                         <div className="w-10 h-10 bg-gradient-to-br from-purple-100 to-indigo-100 rounded-lg flex items-center justify-center">
                           <span className="text-purple-600 font-bold text-sm">
-                            {user.name.split(' ').map(n => n[0]).join('')}
+                            {user.name?.split(' ').map((n: string) => n[0]).join('')}
                           </span>
                         </div>
                         <div>
@@ -432,24 +551,26 @@ export default function AdminPage() {
               <h3 className="text-lg leading-6 font-medium text-gray-900">System Overview</h3>
             </div>
             <div className="p-6">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
                 <div className="text-center">
                   <div className="bg-blue-50 rounded-lg p-4">
                     <ChartBarIcon className="h-8 w-8 text-blue-600 mx-auto mb-2" />
-                    <p className="text-sm font-medium text-gray-900">Sales Performance</p>
+                    <p className="text-sm font-medium text-gray-900">Total Transactions</p>
                     <p className="text-2xl font-bold text-blue-600">{totalSales}</p>
-                    <p className="text-xs text-gray-500">Total Transactions</p>
+                    <p className="text-xs text-gray-500">
+                      {totalInPersonSales} in-store, {totalCompletedOrders} online
+                    </p>
                   </div>
                 </div>
                 
                 <div className="text-center">
                   <div className="bg-green-50 rounded-lg p-4">
-                    <ShoppingBagIcon className="h-8 w-8 text-green-600 mx-auto mb-2" />
-                    <p className="text-sm font-medium text-gray-900">Product Health</p>
+                    <CurrencyDollarIcon className="h-8 w-8 text-green-600 mx-auto mb-2" />
+                    <p className="text-sm font-medium text-gray-900">Profit Margin</p>
                     <p className="text-2xl font-bold text-green-600">
-                      {((products.filter(p => p.quantity > 5).length / totalProducts) * 100).toFixed(0)}%
+                      {profitMargin.toFixed(1)}%
                     </p>
-                    <p className="text-xs text-gray-500">Well Stocked Products</p>
+                    <p className="text-xs text-gray-500">Overall profit percentage</p>
                   </div>
                 </div>
                 
@@ -461,6 +582,17 @@ export default function AdminPage() {
                       {users.filter(u => u.status === 'active').length}/{totalUsers}
                     </p>
                     <p className="text-xs text-gray-500">Active Users</p>
+                  </div>
+                </div>
+
+                <div className="text-center">
+                  <div className="bg-orange-50 rounded-lg p-4">
+                    <ShoppingBagIcon className="h-8 w-8 text-orange-600 mx-auto mb-2" />
+                    <p className="text-sm font-medium text-gray-900">Revenue Split</p>
+                    <p className="text-2xl font-bold text-orange-600">
+                      ${revenueFromOrders.toFixed(0)}
+                    </p>
+                    <p className="text-xs text-gray-500">From Online Orders</p>
                   </div>
                 </div>
               </div>

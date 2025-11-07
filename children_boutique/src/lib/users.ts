@@ -4,8 +4,6 @@ import { User } from "@/types";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
 
-
-
 export async function getUsers(): Promise<User[]> {
   try {
     const response = await fetch(`${API_URL}/api/users`, {
@@ -24,7 +22,20 @@ export async function getUsers(): Promise<User[]> {
       throw new Error(`Failed to fetch users: ${response.statusText}`);
     }
 
-    return response.json();
+    const data = await response.json();
+    
+    // ✅ FIX: Extract users array from the response
+    // The API returns { users: [...] } but sometimes might return just the array
+    if (Array.isArray(data.users)) {
+      return data.users;
+    } else if (Array.isArray(data)) {
+      return data;
+    } else if (data.data && Array.isArray(data.data)) {
+      return data.data;
+    } else {
+      console.warn('Unexpected response format from /api/users:', data);
+      return [];
+    }
   } catch (error) {
     console.error('Error in getUsers:', error);
     // Return empty array instead of throwing to prevent breaking the admin page

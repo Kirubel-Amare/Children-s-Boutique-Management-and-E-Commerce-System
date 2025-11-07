@@ -1,5 +1,6 @@
 // src/types/index.ts
 import { DefaultSession } from "next-auth";
+import { useState } from "react";
 
 declare module "next-auth" {
   interface Session {
@@ -82,3 +83,20 @@ export interface Notification {
   };
 }
 
+
+export interface Order {
+  id: string;
+  orderNumber: string;
+  customerName: string;
+  status: string;
+  total: number;
+  createdAt: string;
+  orderItems: Array<{
+    productName: string;
+    quantity: number;
+    price: number;
+    product: {
+      name: string;
+    };
+  }>;
+}

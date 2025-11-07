@@ -4,6 +4,7 @@ const API_URL = process.env.NEXTAUTH_URL || 'http://localhost:3000';
 
 // Add to src/lib/products.ts or create new file src/lib/sales.ts
 export interface SaleWithDetails {
+  profit: number;
   id: string;
   productId: string;
   quantity: number;
