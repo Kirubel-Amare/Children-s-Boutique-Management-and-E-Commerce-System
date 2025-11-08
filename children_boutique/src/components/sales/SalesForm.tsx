@@ -92,7 +92,7 @@ export default function SalesForm({ onSaleCreated }: SalesFormProps) {
             value={selectedProductId}
             onChange={(e) => setSelectedProductId(e.target.value)}
             required
-            className="block w-full pl-10 pr-4 py-3 b rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-pink-500 bg-white text-gray-900 placeholder-gray-500 transition-colors"
+            className="block w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-pink-500 bg-white text-gray-900 placeholder-gray-500 transition-colors"
           >
             <option value="">Choose a product</option>
             {products.map(product => (

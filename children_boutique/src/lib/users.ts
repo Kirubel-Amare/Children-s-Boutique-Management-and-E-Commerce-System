@@ -1,6 +1,4 @@
 // src/lib/users.ts
-
-import { User } from '@/types';
 import { apiFetch } from './apiClient';
 
 export async function getUsers(): Promise<any> {

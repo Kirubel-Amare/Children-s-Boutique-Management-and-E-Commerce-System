@@ -91,15 +91,15 @@ export default function AdminPage() {
 
   // Additional smaller components
 const AdminWelcomeBanner: React.FC = () => (
-  <div className="bg-gradient-to-r from-purple-500 to-indigo-600 rounded-xl shadow-sm p-6 text-white">
-    <div className="flex items-center justify-between">
+  <div className="bg-gradient-to-r from-purple-500 to-indigo-600 rounded-xl shadow-sm p-6 text-white ">
+    <div className="flex items-center justify-between ">
       <div>
         <h1 className="text-2xl font-bold mb-2">Admin Dashboard 👑</h1>
         <p className="opacity-90">Complete system overview and management controls</p>
       </div>
       <div className="hidden md:block">
         <div className="bg-white bg-opacity-20 rounded-lg p-3">
-          <p className="text-sm">System Status: <span className="font-semibold">All Systems Operational</span></p>
+          <p  className="font-semibold text-gray-600">All Systems Operational</p>
         </div>
       </div>
     </div>
@@ -157,20 +157,12 @@ const MainContentGrid: React.FC<MainContentGridProps> = ({ metrics, notification
             notifications={notifications}
             users={users}
           />
+          <ContactMessages maxItems={5} showViewAll={true} />
           
           <SystemOverview metrics={systemMetrics} />
 
-<div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-  <RecentTransactions transactions={metrics.allTransactions} />
-  <SystemAlerts notifications={notifications} unreadCount={metrics.unreadNotifications} />
-  <InventoryStatus 
-    lowStockProducts={metrics.lowStockProducts}
-    outOfStockProducts={metrics.outOfStockProducts}
-    totalProducts={metrics.totalProducts}
-  />
-  <ContactMessages maxItems={5} showViewAll={true} />
-</div>
-        </div>
+
+        </div> 
       </SidebarLayout>
     </ProtectedRoute>
   );

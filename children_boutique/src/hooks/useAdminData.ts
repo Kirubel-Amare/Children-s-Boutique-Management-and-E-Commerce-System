@@ -5,7 +5,7 @@ import { getNotifications } from '@/lib/notifications';
 import { getSales, SaleWithDetails } from '@/lib/sales';
 import { getUsers } from '@/lib/users';
 import { Product, Order } from '@/types';
-import { Notification } from '@/lib/notifications';
+import { Notification } from '@/types';
 
 interface AdminData {
   products: Product[];

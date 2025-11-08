@@ -1,19 +1,5 @@
 // src/lib/notifications.ts
-export interface Notification {
-  id: string;
-  type: string;
-  title: string;
-  message: string;
-  isRead: boolean;
-  productId?: string;
-  userId?: string;
-  createdAt: string;
-  product?: {
-    id: string;
-    name: string;
-    quantity: number;
-  };
-}
+
 
 import { apiFetch } from './apiClient';
 

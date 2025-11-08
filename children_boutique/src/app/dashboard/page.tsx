@@ -11,12 +11,20 @@ import DashboardLayout from '@/components/layout/DashboardLayout';
 import ProtectedRoute from '@/components/auth/ProtectedRoute';
 import Link from 'next/link';
 import SidebarLayout from '@/components/layout/SidebarLayout';
+import { RecentTransactions } from '@/components/admin/RecentTransactions';
+import { SystemAlerts } from '@/components/admin/SystemAlerts';
+import { InventoryStatus } from '@/components/admin/InventoryStatus';
+import { UserManagementPreview } from '@/components/admin/UserManagementPreview';
+import { useAdminMetrics } from '@/hooks/useAdminMetrics';
+import { useAdminData } from '@/hooks/useAdminData';
 
 export default function Dashboard() {
   const [products, setProducts] = useState<Product[]>([]);
   const [sales, setSales] = useState<SaleWithDetails[]>([]);
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [loading, setLoading] = useState(true);
+  const { orders, users} = useAdminData();
+    const metrics = useAdminMetrics(products, sales, orders, notifications, users);
 
   useEffect(() => {
     loadDashboardData();
@@ -52,6 +60,26 @@ export default function Dashboard() {
   const todayRevenue = todaySales.reduce((sum, sale) => sum + sale.total, 0);
   
   const unreadNotifications = notifications.filter(n => !n.isRead).length;
+
+
+  interface MainContentGridProps {
+    metrics: any;
+    notifications: any[];
+    users: any[];
+  }
+  
+  const MainContentGrid: React.FC<MainContentGridProps> = ({ metrics, notifications, users }) => (
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <RecentTransactions transactions={metrics.allTransactions} />
+      <SystemAlerts notifications={notifications} unreadCount={metrics.unreadNotifications} />
+      <InventoryStatus 
+        lowStockProducts={metrics.lowStockProducts}
+        outOfStockProducts={metrics.outOfStockProducts}
+        totalProducts={metrics.totalProducts}
+      />
+      <UserManagementPreview users={users} />
+    </div>
+  );
 
   if (loading) {
     return (
@@ -113,7 +141,7 @@ export default function Dashboard() {
                 </div>
               </div>
 
-              <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+              {/* <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
                 <div className="flex items-center">
                   <div className="flex-shrink-0">
                     <div className="w-8 h-8 bg-yellow-100 rounded-lg flex items-center justify-center">
@@ -125,7 +153,7 @@ export default function Dashboard() {
                     <p className="text-2xl font-bold text-gray-900">{lowStockProducts}</p>
                   </div>
                 </div>
-              </div>
+              </div> */}
 
               <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
                 <div className="flex items-center">
@@ -244,6 +272,11 @@ export default function Dashboard() {
               </div>
             )}
           </div>
+           <MainContentGrid 
+            metrics={metrics}
+            notifications={notifications}
+            users={users}
+          />
         </div>
       </SidebarLayout>
     </ProtectedRoute>

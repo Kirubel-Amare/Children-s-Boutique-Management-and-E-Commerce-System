@@ -35,7 +35,7 @@ export const FormInput: React.FC<FormInputProps> = ({
         name={name}
         value={value}
         onChange={onChange}
-        className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-pink-500 transition-colors ${
+        className={`pr-4 py-3 px-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-pink-500 bg-white text-gray-900 placeholder-gray-500 transition-colors ${
           error ? 'border-red-500' : 'border-gray-300'
         } ${className}`}
         placeholder={placeholder}

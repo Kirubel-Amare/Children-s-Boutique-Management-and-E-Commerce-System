@@ -1,21 +1,6 @@
-import { Product } from '@prisma/client';
 import { apiFetch } from './apiClient';
+import {SaleWithDetails} from '@/types'
 
-export interface SaleWithDetails {
-  profit: number;
-  id: string;
-  productId: string;
-  quantity: number;
-  total: number;
-  tellerId: string;
-  createdAt: string;
-  product: Product;
-  teller: {
-    id: string;
-    name: string;
-    email: string;
-  };
-}
 
 // Fetch all sales
 export async function getSales(): Promise<SaleWithDetails[]> {
@@ -36,3 +21,5 @@ export async function createSale(productId: string, quantity: number): Promise<S
     throw error;
   }
 }
+
+export type { SaleWithDetails };

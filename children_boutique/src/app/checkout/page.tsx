@@ -16,7 +16,6 @@ import { ErrorMessage } from '@/components/auth/ErrorMessage';
 import { 
   UserIcon,
   EnvelopeIcon,
-  PhoneIcon,
   MapPinIcon,
   CreditCardIcon 
 } from '@heroicons/react/24/outline';

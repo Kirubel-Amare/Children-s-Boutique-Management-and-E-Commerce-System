@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import { useContactMessages } from '@/hooks/useContactMessages';
 import { EnvelopeIcon, EyeIcon, ArchiveBoxIcon, CheckIcon, TrashIcon } from '@heroicons/react/24/outline';
+import Link from 'next/link';
 
 interface ContactMessagesProps {
   maxItems?: number;
@@ -92,7 +93,7 @@ export const ContactMessages: React.FC<ContactMessagesProps> = ({
             <select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value as any)}
-              className="text-sm border border-gray-300 rounded-md px-3 py-1 focus:outline-none focus:ring-2 focus:ring-pink-500"
+              className="text-sm border border-gray-300 text-gray-700 rounded-md px-3 py-1 focus:outline-none focus:ring-2 focus:ring-pink-500"
             >
               <option value="ALL">All Messages</option>
               <option value="UNREAD">Unread</option>
@@ -100,7 +101,10 @@ export const ContactMessages: React.FC<ContactMessagesProps> = ({
             </select>
             {showViewAll && (
               <button className="text-pink-600 hover:text-pink-700 text-sm font-medium">
+                
+                <Link href="admin/messages" className="bg-pink-400 text-white px-4 py-2 rounded-lg font-semibold hover:bg-pink-500 transition-colors shadow-sm" >
                 View All
+                </Link>
               </button>
             )}
           </div>
