@@ -36,7 +36,7 @@ export default function OrderDetailPage() {
       await updateOrderStatus({
         status: status as any,
         adminNotes: updateNotes || notes,
-        approvedBy: session?.user?.name,
+        approvedBy: session?.user?.name ?? undefined,
       });
       router.push('/admin/orders');
     } catch (error: any) {

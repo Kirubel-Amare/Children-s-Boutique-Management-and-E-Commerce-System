@@ -1,5 +1,6 @@
-// src/lib/notifications.ts
 
+
+import { Notification } from '@/types';
 
 import { apiFetch } from './apiClient';
 
