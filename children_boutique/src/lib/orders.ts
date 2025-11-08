@@ -54,24 +54,11 @@ export interface OrderResponse {
   orderNumber: string;
 }
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || '';
+import { apiFetch } from './apiClient';
 
 export async function createOrder(orderData: OrderData): Promise<OrderResponse> {
   try {
-    const response = await fetch(`${API_URL}/api/orders`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(orderData),
-    });
-
-    if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error.error || 'Failed to create order');
-    }
-
-    return response.json();
+    return await apiFetch('/api/orders', { method: 'POST', body: JSON.stringify(orderData) });
   } catch (error) {
     console.error('Error creating order:', error);
     throw error;
@@ -80,15 +67,7 @@ export async function createOrder(orderData: OrderData): Promise<OrderResponse> 
 
 export async function getOrders(): Promise<any[]> {
   try {
-    const response = await fetch(`${API_URL}/api/orders`, {
-      cache: 'no-store',
-    });
-
-    if (!response.ok) {
-      throw new Error('Failed to fetch orders');
-    }
-
-    return response.json();
+    return await apiFetch('/api/orders', { cache: 'no-store' });
   } catch (error) {
     console.error('Error fetching orders:', error);
     throw error;

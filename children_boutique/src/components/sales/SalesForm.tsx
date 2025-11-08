@@ -7,7 +7,11 @@ import { createSale } from '@/lib/sales';
 import {getProducts} from '@/lib/products';
 import { useRouter } from 'next/navigation';
 
-export default function SalesForm() {
+interface SalesFormProps {
+  onSaleCreated?: () => void | Promise<void>;
+}
+
+export default function SalesForm({ onSaleCreated }: SalesFormProps) {
   const router = useRouter();
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(false);
@@ -54,11 +58,11 @@ export default function SalesForm() {
       setQuantity(1);
       setSelectedProduct(null);
       
-      // Refresh data
-      await loadProducts();
-      router.refresh();
-      
-      alert('Sale recorded successfully!');
+  // Refresh data and notify parent if provided
+  await loadProducts();
+  if (onSaleCreated) await onSaleCreated();
+  router.refresh();
+  alert('Sale recorded successfully!');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Something went wrong');
     } finally {

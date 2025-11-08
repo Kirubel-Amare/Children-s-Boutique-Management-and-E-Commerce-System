@@ -1,44 +1,26 @@
 // src/lib/users.ts
 
-import { User } from "@/types";
+import { User } from '@/types';
+import { apiFetch } from './apiClient';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
-
-export async function getUsers(): Promise<User[]> {
+export async function getUsers(): Promise<any> {
   try {
-    const response = await fetch(`${API_URL}/api/users`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
+    const data = await apiFetch('/api/users');
 
-    if (!response.ok) {
-      // If the endpoint doesn't exist yet, return empty array
-      if (response.status === 404) {
-        console.warn('Users API endpoint not found, returning empty array');
-        return [];
-      }
-      throw new Error(`Failed to fetch users: ${response.statusText}`);
-    }
+    // The API may return the users array directly or wrap it.
+    if (Array.isArray(data)) return data;
+    if (Array.isArray(data?.users)) return data.users;
+    if (Array.isArray(data?.data)) return data.data;
 
-    const data = await response.json();
-    
-    // ✅ FIX: Extract users array from the response
-    // The API returns { users: [...] } but sometimes might return just the array
-    if (Array.isArray(data.users)) {
-      return data.users;
-    } else if (Array.isArray(data)) {
-      return data;
-    } else if (data.data && Array.isArray(data.data)) {
-      return data.data;
-    } else {
-      console.warn('Unexpected response format from /api/users:', data);
+    console.warn('Unexpected response format from /api/users:', data);
+    return [];
+  } catch (error: any) {
+    console.error('Error in getUsers:', error);
+    // Keep previous behavior: return empty array on error to avoid breaking admin page
+    if (error?.status === 404) {
+      console.warn('Users API endpoint not found, returning empty array');
       return [];
     }
-  } catch (error) {
-    console.error('Error in getUsers:', error);
-    // Return empty array instead of throwing to prevent breaking the admin page
     return [];
   }
 }

@@ -32,6 +32,7 @@ const navigation = [
   { name: 'Orders', href: '/dashboard/orders', icon: ShoppingBagIcon, role: ['ADMIN'] },
   { name: 'Reports', href: '/dashboard/reports', icon: ChartBarIcon, role: ['ADMIN'] },
   { name: 'Settings', href: '/settings', icon: CogIcon, role: ['ADMIN','TELLER'] },
+  {name: 'messages', href: '/admin/messages', icon: CogIcon, role: ['ADMIN'] },
 
 ];
 

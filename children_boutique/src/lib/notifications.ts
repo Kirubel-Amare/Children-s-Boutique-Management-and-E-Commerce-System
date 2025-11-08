@@ -15,20 +15,12 @@ export interface Notification {
   };
 }
 
-const API_URL = process.env.NEXTAUTH_URL || 'http://localhost:3000';
+import { apiFetch } from './apiClient';
 
 // Fetch notifications
 export async function getNotifications(): Promise<Notification[]> {
   try {
-    const response = await fetch(`${API_URL}/api/notifications`, {
-      cache: 'no-store',
-    });
-
-    if (!response.ok) {
-      throw new Error(`Failed to fetch notifications: ${response.statusText}`);
-    }
-
-    return response.json();
+    return await apiFetch('/api/notifications', { cache: 'no-store' });
   } catch (error) {
     console.error('Error in getNotifications:', error);
     throw error;
@@ -38,13 +30,7 @@ export async function getNotifications(): Promise<Notification[]> {
 // Mark notification as read
 export async function markNotificationAsRead(id: string): Promise<void> {
   try {
-    const response = await fetch(`${API_URL}/api/notifications/${id}`, {
-      method: 'PATCH',
-    });
-
-    if (!response.ok) {
-      throw new Error(`Failed to mark notification as read: ${response.statusText}`);
-    }
+    await apiFetch(`/api/notifications/${id}`, { method: 'PATCH' });
   } catch (error) {
     console.error('Error in markNotificationAsRead:', error);
     throw error;
@@ -54,13 +40,7 @@ export async function markNotificationAsRead(id: string): Promise<void> {
 // Check for low stock and create notifications
 export async function checkLowStock(): Promise<void> {
   try {
-    const response = await fetch(`${API_URL}/api/products/low-stock-check`, {
-      method: 'POST',
-    });
-
-    if (!response.ok) {
-      throw new Error(`Failed to check low stock: ${response.statusText}`);
-    }
+    await apiFetch('/api/products/low-stock-check', { method: 'POST' });
   } catch (error) {
     console.error('Error in checkLowStock:', error);
     throw error;
