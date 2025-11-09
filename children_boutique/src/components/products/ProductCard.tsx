@@ -78,11 +78,8 @@ export default function ProductCard({ product }: ProductCardProps) {
             <span className="text-2xl font-bold text-pink-600">
               ${product.price.toFixed(2)}
             </span>
-            {product.originalPrice && (
-              <span className="text-sm text-gray-500 line-through ml-2">
-                ${product.originalPrice.toFixed(2)}
-              </span>
-            )}
+            
+    
           </div>
           
           {product.size && (
