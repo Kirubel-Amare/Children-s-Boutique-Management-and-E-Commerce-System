@@ -42,34 +42,91 @@ export async function GET(
 // PUT - Update product (admin only)
 export async function PUT(
   request: NextRequest,
-  { params }: RouteParams
+  { params }: RouteParams  // Use the same RouteParams interface
 ) {
   try {
-    const session = await getServerSession(authOptions as any) as Session | null;
+    const session = (await getServerSession(authOptions as any)) as Session | null;
+
+    if (!session || session.user?.role !== 'ADMIN') {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    const { id } = await params; // Await the params here
     
-    if (!session || session.user.role !== 'ADMIN') {
+    console.log('=== UPDATE PRODUCT REQUEST ===');
+    console.log('Product ID:', id);
+    console.log('Full params:', await params);
+
+    if (!id) {
       return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
+        { error: 'Product ID is required' },
+        { status: 400 }
       );
     }
 
-    const { id } = await params;
     const body = await request.json();
-    
+    console.log('Request body:', body);
+
+    // Validate required fields
+    const requiredFields = ['name', 'originalPrice', 'profitAmount', 'quantity', 'category', 'sizes', 'color'];
+    for (const field of requiredFields) {
+      if (!body[field] && body[field] !== 0) {
+        console.log(`Missing field: ${field}`);
+        return NextResponse.json(
+          { error: `Missing required field: ${field}` },
+          { status: 400 }
+        );
+      }
+    }
+
+    // Ensure sizes is properly formatted as array
+    let sizesArray: string[];
+    if (Array.isArray(body.sizes)) {
+      sizesArray = body.sizes;
+    } else if (typeof body.sizes === 'string') {
+      try {
+        sizesArray = JSON.parse(body.sizes);
+      } catch {
+        sizesArray = [body.sizes];
+      }
+    } else {
+      sizesArray = [];
+    }
+
+    const originalPrice = parseFloat(body.originalPrice);
+    const profitAmount = parseFloat(body.profitAmount);
+    const sellingPrice = originalPrice + profitAmount;
+
+    // Check if product exists first
+    const existingProduct = await prisma.product.findUnique({
+      where: { id }
+    });
+
+    if (!existingProduct) {
+      return NextResponse.json(
+        { error: 'Product not found' },
+        { status: 404 }
+      );
+    }
+
+    // Update product
     const product = await prisma.product.update({
       where: { id },
       data: {
         name: body.name,
-        description: body.description,
-        price: parseFloat(body.price),
-        quantity: parseInt(body.quantity),
+        description: body.description || '',
         category: body.category,
-        size: body.size,
+        quantity: parseInt(body.quantity),
+        sizes: sizesArray,
         color: body.color,
-        imageUrl: body.imageUrl,
-      }
+        imageUrl: body.imageUrl || '',
+        originalPrice: originalPrice,
+        profitAmount: profitAmount,
+        price: sellingPrice,
+      },
     });
+
+    console.log('Updated product:', product);
 
     return NextResponse.json(product);
   } catch (error) {
@@ -89,7 +146,7 @@ export async function DELETE(
   try {
     const session = await getServerSession(authOptions as any) as Session | null;
     
-    if (!session || session.user.role !== 'ADMIN') {
+    if (!session || session.user?.role !== 'ADMIN') {
       return NextResponse.json(
         { error: 'Unauthorized' },
         { status: 401 }

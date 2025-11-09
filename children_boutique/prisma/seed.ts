@@ -47,7 +47,7 @@ async function main() {
         price: 16,               // final selling price
         quantity: 20,
         category: 'clothes',
-        size: 'M',
+        sizes: 'M',
         color: 'Blue',
       },
       {
@@ -59,7 +59,7 @@ async function main() {
         price: 35,
         quantity: 15,
         category: 'shoes',
-        size: '28',
+        sizes: '28',
         color: 'White',
       },
       {
@@ -71,7 +71,7 @@ async function main() {
         price: 23,
         quantity: 8,
         category: 'clothes',
-        size: '6M',
+        sizes: '6M',
         color: 'Pink',
       },
     ],

@@ -2,6 +2,7 @@
 import { getProduct, getProducts } from '@/lib/products';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
+import Layout from '@/components/layout/Layout';
 
 interface ProductPageProps {
   params: Promise<{
@@ -19,6 +20,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
   }
 
   return (
+    <Layout>
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <div className="mb-4">
         <Link 
@@ -80,10 +82,10 @@ export default async function ProductPage({ params }: ProductPageProps) {
                   <span className="text-gray-600 capitalize">{product.category}</span>
                 </div>
               )}
-              {product.size && (
+              {product.sizes && (
                 <div className="flex">
                   <span className="text-gray-700 font-medium w-24">Size:</span>
-                  <span className="text-gray-600">{product.size}</span>
+                  <span className="text-gray-600">{product.sizes}</span>
                 </div>
               )}
               {product.color && (
@@ -115,5 +117,6 @@ export default async function ProductPage({ params }: ProductPageProps) {
         </div>
       </div>
     </div>
+    </Layout>
   );
 }

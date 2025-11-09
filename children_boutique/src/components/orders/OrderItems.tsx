@@ -48,7 +48,7 @@ const OrderItemRow: React.FC<{ item: Order['orderItems'][0] }> = ({ item }) => {
 
 const OrderSummary: React.FC<{ order: Order }> = ({ order }) => {
   return (
-    <div className="mt-4 pt-4 border-t border-gray-200 space-y-2">
+    <div className="mt-4 pt-4 border-t border-gray-200 space-y-2 text-gray-900">
       <div className="flex justify-between text-sm">
         <p>Subtotal</p>
         <p>{formatCurrency(order.subtotal)}</p>

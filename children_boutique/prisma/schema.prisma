@@ -61,7 +61,7 @@ model Product {
   
   quantity       Int
   category       String
-  size           String?
+  sizes          String[]
   color          String?
   imageUrl       String?
   createdAt      DateTime     @default(now())

@@ -10,6 +10,18 @@ interface ProductCardProps {
 export default function ProductCard({ product }: ProductCardProps) {
   const { dispatch } = useCart();
 
+  // Helper function to parse sizes from string or array
+  const parseSizes = (sizes: string | string[]): string[] => {
+    if (Array.isArray(sizes)) return sizes;
+    if (typeof sizes === 'string' && sizes.includes(',')) {
+      return sizes.split(',').map(s => s.trim()).filter(Boolean);
+    }
+    if (typeof sizes === 'string' && sizes) {
+      return [sizes];
+    }
+    return [];
+  };
+
   const getStockStatus = (quantity: number) => {
     if (quantity === 0) return { text: 'Out of stock', color: 'bg-red-100 text-red-800' };
     if (quantity <= 5) return { text: `Only ${quantity} left`, color: 'bg-yellow-100 text-yellow-800' };
@@ -22,6 +34,8 @@ export default function ProductCard({ product }: ProductCardProps) {
   const handleAddToCart = () => {
     dispatch({ type: 'ADD_ITEM', payload: product });
   };
+
+  const sizesArray = parseSizes(product.sizes);
 
   return (
     <div className="group bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
@@ -78,14 +92,21 @@ export default function ProductCard({ product }: ProductCardProps) {
             <span className="text-2xl font-bold text-pink-600">
               ${product.price.toFixed(2)}
             </span>
-            
-    
           </div>
           
-          {product.size && (
-            <span className="text-sm text-gray-600 bg-gray-100 px-2 py-1 rounded-lg font-medium">
-              Size: {product.size}
-            </span>
+          {/* Updated Sizes Display - Show as tags */}
+          {sizesArray.length > 0 && (
+            <div className="flex flex-wrap gap-1 justify-end">
+              <p className='text-gray-900'>size </p>
+              {sizesArray.map((size, index) => (
+                <span 
+                  key={index}
+                  className="text-xs text-gray-600 bg-gray-100 px-2 py-1 rounded-md font-medium"
+                >
+                  {" "+size}
+                </span>
+              ))}
+            </div>
           )}
         </div>
         
@@ -97,7 +118,14 @@ export default function ProductCard({ product }: ProductCardProps) {
           )}
           {product.color && (
             <span className="text-gray-600 flex items-center">
-              <span className="w-3 h-3 rounded-full bg-current mr-1"></span>
+              <span 
+                className="w-3 h-3 rounded-full mr-1 border border-gray-300"
+                style={{ 
+                  backgroundColor: product.color.toLowerCase() === 'white' ? '#f3f4f6' : 
+                                 product.color.toLowerCase() === 'black' ? '#000' : 
+                                 product.color 
+                }}
+              ></span>
               {product.color}
             </span>
           )}

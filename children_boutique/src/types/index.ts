@@ -20,19 +20,21 @@ declare module "next-auth" {
 }
 
 export interface Product {
-  [x: string]: any;
   id: string;
   name: string;
-  description: string | null;
+  description: string;
+  originalPrice: number;
+  profitAmount: number; 
   price: number;
   quantity: number;
   category: string;
-  size: string | null;
-  color: string | null;
-  imageUrl: string | null;
-  createdAt: Date;
-  updatedAt: Date;
+  sizes: string[] ; 
+  color: string; 
+  imageUrl: string;
+  createdAt: string;
+  updatedAt: string;
 }
+
 
 export interface FormData {
   name: string;

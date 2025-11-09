@@ -7,7 +7,7 @@ interface OrderTimelineProps {
 
 export const OrderTimeline: React.FC<OrderTimelineProps> = ({ order }) => {
   return (
-    <div className="bg-white shadow-sm rounded-lg p-6 border border-gray-200">
+    <div className="bg-white shadow-sm rounded-lg p-6 border border-gray-200 text-gray-900">
       <h3 className="text-lg font-semibold text-gray-900 mb-4">Order Timeline</h3>
       <div className="space-y-3 text-sm">
         <div className="flex justify-between">

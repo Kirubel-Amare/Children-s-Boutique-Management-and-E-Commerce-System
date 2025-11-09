@@ -28,16 +28,49 @@ export async function getProduct(id: string): Promise<Product> {
 }
 
 // Create product
-export async function createProduct(productData: ProductFormData, token?: string): Promise<Product> {
-  return await apiFetch('/api/products', { method: 'POST', body: JSON.stringify(productData) }, token);
+export async function createProduct(data: ProductFormData): Promise<Product> {
+  const response = await fetch('/api/products', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(data),
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.error || 'Failed to create product');
+  }
+
+  return response.json();
 }
 
 // Update product
-export async function updateProduct(id: string, productData: Partial<ProductFormData>, token?: string): Promise<Product> {
-  return await apiFetch(`/api/products/${id}`, { method: 'PUT', body: JSON.stringify(productData) }, token);
+export async function updateProduct(id: string, data: ProductFormData): Promise<Product> {
+  const response = await fetch(`/api/products/${id}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(data),
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.error || 'Failed to update product');
+  }
+
+  return response.json();
 }
 
 // Delete product
-export async function deleteProduct(id: string, token?: string): Promise<void> {
-  await apiFetch(`/api/products/${id}`, { method: 'DELETE' }, token);
+export async function deleteProduct(id: string): Promise<void> {
+  const response = await fetch(`/api/products/${id}`, {
+    method: 'DELETE',
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.error || 'Failed to delete product');
+  }
 }

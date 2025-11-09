@@ -29,6 +29,8 @@ export async function GET(request: NextRequest) {
 }
 
 // 🟢 POST - Create new product (Admin only)
+// src/app/api/products/route.ts - POST function
+// src/app/api/products/route.ts - POST function
 export async function POST(request: NextRequest) {
   try {
     const session = (await getServerSession(authOptions as any)) as Session | null;
@@ -38,35 +40,74 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
+    
+    console.log('Received product data:', body);
 
-    // 🟡 Calculate profit and final selling price
+    // Validate required fields
+    const requiredFields = ['name', 'originalPrice', 'profitAmount', 'quantity', 'category', 'sizes', 'color'];
+    for (const field of requiredFields) {
+      if (!body[field] && body[field] !== 0) {
+        console.log(`Missing required field: ${field}`);
+        return NextResponse.json(
+          { error: `Missing required field: ${field}` },
+          { status: 400 }
+        );
+      }
+    }
+
+    // 🟡 Calculate final price
     const originalPrice = parseFloat(body.originalPrice);
-    const profitPercent = parseFloat(body.profitPercent);
-
-    const profitAmount = (originalPrice * profitPercent) / 100;
+    const profitAmount = parseFloat(body.profitAmount);
     const sellingPrice = originalPrice + profitAmount;
+
+    console.log('Calculated prices:', { originalPrice, profitAmount, sellingPrice });
+
+    // Ensure sizes is properly formatted as array
+    let sizesArray: string[];
+    if (Array.isArray(body.sizes)) {
+      sizesArray = body.sizes;
+    } else if (typeof body.sizes === 'string') {
+      // If it's a string, try to parse it as array or create array with single value
+      try {
+        sizesArray = JSON.parse(body.sizes);
+      } catch {
+        sizesArray = [body.sizes];
+      }
+    } else {
+      sizesArray = [];
+    }
+
+    console.log('Processed sizes array:', sizesArray);
 
     // 🟢 Create product with profit fields
     const product = await prisma.product.create({
-   data: {
-    name: body.name,
-    description: body.description,
-    category: body.category,
-    quantity: parseInt(body.quantity),
-    size: body.size,
-    color: body.color,
-    imageUrl: body.imageUrl,
-    originalPrice: parseFloat(body.originalPrice),
-    profitAmount: parseFloat(body.profit), // user manually enters
-    price: parseFloat(body.originalPrice) + parseFloat(body.profit),
-  },
+      data: {
+        name: body.name,
+        description: body.description || '',
+        category: body.category,
+        quantity: parseInt(body.quantity),
+        sizes: sizesArray, // Store as array
+        color: body.color,
+        imageUrl: body.imageUrl || '',
+        originalPrice: originalPrice,
+        profitAmount: profitAmount,
+        price: sellingPrice,
+      },
     });
 
-    return NextResponse.json(product);
+    console.log('Created product:', product);
+
+    return NextResponse.json(product, { status: 201 });
   } catch (error) {
     console.error('Error creating product:', error);
+    
+    let errorMessage = 'Failed to create product';
+    if (error instanceof Error) {
+      errorMessage = error.message;
+    }
+    
     return NextResponse.json(
-      { error: 'Failed to create product' },
+      { error: errorMessage },
       { status: 500 }
     );
   }
