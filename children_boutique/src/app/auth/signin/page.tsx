@@ -25,7 +25,6 @@ export default function SignIn() {
     setPassword,
     setShowPassword,
     handleSubmit,
-    demoLogin,
   } = useSignIn();
 
   return (

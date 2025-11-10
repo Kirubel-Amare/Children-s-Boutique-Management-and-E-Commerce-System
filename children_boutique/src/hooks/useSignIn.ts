@@ -14,7 +14,7 @@ interface UseSignInReturn {
   setShowPassword: (show: boolean) => void;
   setError: (error: string) => void;
   handleSubmit: (e: React.FormEvent) => Promise<void>;
-  demoLogin: (role: 'admin' | 'teller') => void;
+  
 }
 
 export const useSignIn = (): UseSignInReturn => {
@@ -50,11 +50,6 @@ export const useSignIn = (): UseSignInReturn => {
     }
   };
 
-  const demoLogin = (role: 'admin' | 'teller') => {
-    setEmail(role === 'admin' ? 'admin@boutique.com' : 'teller@boutique.com');
-    setPassword('password');
-  };
-
   return {
     email,
     password,
@@ -66,6 +61,5 @@ export const useSignIn = (): UseSignInReturn => {
     setShowPassword,
     setError,
     handleSubmit,
-    demoLogin,
   };
 };

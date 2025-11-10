@@ -23,7 +23,7 @@ export const DecorativeSide: React.FC = () => {
           <div className="bg-white bg-opacity-20 backdrop-blur-sm rounded-2xl p-8 border border-white border-opacity-30">
             <div className="text-6xl mb-6">👑</div>
             <h3 className="text-2xl font-bold mb-4">Boutique Management</h3>
-            <p className="text-white text-opacity-90 leading-relaxed">
+            <p className=" text-opacity-90 leading-relaxed text-gray-900">
               Manage your children&apos;s boutique with ease. Track inventory, record sales,
               and grow your business with our comprehensive management system.
             </p>
@@ -31,7 +31,7 @@ export const DecorativeSide: React.FC = () => {
             {/* Features List */}
             <div className="mt-8 space-y-4 text-left">
               {features.map((feature, index) => (
-                <div key={index} className="flex items-center text-white text-opacity-90">
+                <div key={index} className="flex items-center text-gray-900 text-opacity-90">
                   <span className="text-xl mr-3">{feature.icon}</span>
                   <span>{feature.text}</span>
                 </div>
