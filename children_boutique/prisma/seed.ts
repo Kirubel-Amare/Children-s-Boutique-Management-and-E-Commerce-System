@@ -35,48 +35,48 @@ async function main() {
     },
   })
 
-  // Sample products with profit fields
-  await prisma.product.createMany({
-    data: [
-      {
-        name: 'Kids T-Shirt',
-        description: 'Comfortable cotton t-shirt for kids',
-        originalPrice: 12,       // Original cost
-        profitPercent: 33,       // Profit % desired
-        profitAmount: 4,         // Calculated profit
-        price: 16,               // final selling price
-        quantity: 20,
-        category: 'clothes',
-        sizes: 'M',
-        color: 'Blue',
-      },
-      {
-        name: 'Children Sneakers',
-        description: 'Durable sneakers for active kids',
-        originalPrice: 25,
-        profitPercent: 40,
-        profitAmount: 10,
-        price: 35,
-        quantity: 15,
-        category: 'shoes',
-        sizes: '28',
-        color: 'White',
-      },
-      {
-        name: 'Baby Romper',
-        description: 'Adorable romper for babies',
-        originalPrice: 15,
-        profitPercent: 53,
-        profitAmount: 8,
-        price: 23,
-        quantity: 8,
-        category: 'clothes',
-        sizes: '6M',
-        color: 'Pink',
-      },
-    ],
-    skipDuplicates: true,
-  })
+await prisma.product.createMany({
+  data: [
+    {
+      name: 'Kids T-Shirt',
+      description: 'Comfortable cotton t-shirt for kids',
+      originalPrice: 12,
+      profitPercent: 33,
+      profitAmount: 4,
+      price: 16,
+      quantity: 20,
+      category: 'clothes',
+      sizes: ['M'],     // <-- changed to array
+      color: 'Blue',
+    },
+    {
+      name: 'Children Sneakers',
+      description: 'Durable sneakers for active kids',
+      originalPrice: 25,
+      profitPercent: 40,
+      profitAmount: 10,
+      price: 35,
+      quantity: 15,
+      category: 'shoes',
+      sizes: ['28'],    // <-- changed to array
+      color: 'White',
+    },
+    {
+      name: 'Baby Romper',
+      description: 'Adorable romper for babies',
+      originalPrice: 15,
+      profitPercent: 53,
+      profitAmount: 8,
+      price: 23,
+      quantity: 8,
+      category: 'clothes',
+      sizes: ['6M'],    // <-- changed to array
+      color: 'Pink',
+    },
+  ],
+  skipDuplicates: true,
+})
+  
 
   console.log('✅ Seed completed successfully')
 }
