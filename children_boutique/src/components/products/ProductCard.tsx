@@ -1,15 +1,13 @@
-// src/components/products/ProductCard.tsx
+// src/components/products/ProductCard.tsx (final)
 import { Product } from '@/types';
 import Link from 'next/link';
-import { useCart } from '@/context/CartContext';
+import AddToCartButton from '@/components/products/AddToCartButton';
 
 interface ProductCardProps {
   product: Product;
 }
 
 export default function ProductCard({ product }: ProductCardProps) {
-  const { dispatch } = useCart();
-
   // Helper function to parse sizes from string or array
   const parseSizes = (sizes: string | string[]): string[] => {
     if (Array.isArray(sizes)) return sizes;
@@ -30,11 +28,6 @@ export default function ProductCard({ product }: ProductCardProps) {
   };
 
   const stockStatus = getStockStatus(product.quantity);
-
-  const handleAddToCart = () => {
-    dispatch({ type: 'ADD_ITEM', payload: product });
-  };
-
   const sizesArray = parseSizes(product.sizes);
 
   return (
@@ -138,17 +131,9 @@ export default function ProductCard({ product }: ProductCardProps) {
           >
             View Details
           </Link>
-          <button 
-            onClick={handleAddToCart}
-            disabled={product.quantity === 0}
-            className={`px-4 py-3 rounded-lg font-semibold transition-all shadow-md hover:shadow-lg ${
-              product.quantity > 0
-                ? 'bg-gray-100 text-gray-700 hover:bg-gray-200 hover:text-gray-900'
-                : 'bg-gray-300 text-gray-500 cursor-not-allowed'
-            }`}
-          >
-            {product.quantity > 0 ? '🛒' : '❌'}
-          </button>
+          
+          {/* Add to Cart Button with card variant */}
+          <AddToCartButton product={product} variant="card" />
         </div>
       </div>
     </div>
