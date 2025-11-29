@@ -89,17 +89,17 @@ export default function Header() {
         >
           {/* Backdrop */}
           <div
-            className="absolute inset-0 bg-black/30"
+            className="absolute inset-0 bg-black/20"
             onClick={() => setMobileMenuOpen(false)}
           />
 
-          {/* Slide-in menu */}
-          <div className="absolute right-0 top-0 w-64 h-full bg-white shadow-xl p-6 flex flex-col space-y-4">
+          {/* Slide-in menu panel */}
+          <div className="absolute right-0 top-0 w-64 h-full bg-gray-900 shadow-xl p-6 flex flex-col space-y-4">
             {navLinks.map(link => (
               <Link
                 key={link.href}
                 href={link.href}
-                className="text-gray-800 hover:text-pink-600 font-medium text-lg transition-colors"
+                className="text-white hover:text-pink-600 font-medium text-lg transition-colors"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 {link.label}
@@ -121,7 +121,7 @@ export default function Header() {
                 dispatch({ type: 'TOGGLE_CART' });
                 setMobileMenuOpen(false);
               }}
-              className="relative flex items-center justify-center p-2 text-gray-700 hover:text-pink-600 font-medium text-lg rounded-lg shadow-sm hover:shadow-md transition-all"
+              className="relative bg-pink-600 flex items-center justify-center p-2 text-white hover:text-pink-600 font-medium text-lg rounded-lg shadow-sm hover:shadow-md transition-all"
             >
               <ShoppingCartIcon className="h-6 w-6 mr-2" /> Cart ({cartItemsCount})
             </button>
