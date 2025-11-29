@@ -6,10 +6,10 @@ import { prisma } from '@/lib/db';
 
 export async function GET(
   request: NextRequest,
-  context: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { params } = context;
+    const { id } = await context.params;
 
     const session = await getServerSession(authOptions as any) as any;
 
@@ -18,7 +18,7 @@ export async function GET(
     }
 
     const message = await prisma.contactMessage.findUnique({
-      where: { id: params.id },
+      where: { id },
       select: {
         id: true,
         name: true,
@@ -37,10 +37,9 @@ export async function GET(
       );
     }
 
-    // Mark as read when fetched
     if (message.status === 'UNREAD') {
       await prisma.contactMessage.update({
-        where: { id: params.id },
+        where: { id },
         data: { status: 'READ' }
       });
     }
@@ -58,10 +57,10 @@ export async function GET(
 
 export async function DELETE(
   request: NextRequest,
-  context: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { params } = context;
+    const { id } = await context.params;
 
     const session = await getServerSession(authOptions as any) as any;
 
@@ -70,7 +69,7 @@ export async function DELETE(
     }
 
     await prisma.contactMessage.delete({
-      where: { id: params.id }
+      where: { id }
     });
 
     return NextResponse.json({ message: 'Message deleted successfully' });

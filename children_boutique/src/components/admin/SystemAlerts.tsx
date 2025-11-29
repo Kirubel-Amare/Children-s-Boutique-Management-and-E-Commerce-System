@@ -1,7 +1,8 @@
 // components/admin/SystemAlerts.tsx
 import Link from 'next/link';
 import { CheckCircleIcon, ExclamationTriangleIcon } from '@heroicons/react/24/outline';
-import { Notification } from '@/lib/notifications';
+import { getNotifications } from '@/lib/notifications';
+import { Notification } from '@/types';
 
 interface SystemAlertsProps {
   notifications: Notification[];

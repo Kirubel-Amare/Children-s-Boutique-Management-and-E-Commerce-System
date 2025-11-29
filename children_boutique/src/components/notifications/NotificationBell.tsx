@@ -2,7 +2,8 @@
 'use client';
 
 import { useState, useEffect, type SVGProps } from 'react';
-import { Notification, getNotifications, markNotificationAsRead } from '@/lib/notifications';
+import {  getNotifications, markNotificationAsRead } from '@/lib/notifications';
+import { Notification } from '@/types';
 const BellIcon = (props: SVGProps<SVGSVGElement>) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"

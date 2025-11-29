@@ -115,10 +115,10 @@ export default function SalesForm({ onSaleCreated }: SalesFormProps) {
                 <span className="text-gray-900">Available:</span>
                 <span className="ml-2 font-medium text-gray-900">{selectedProduct.quantity}</span>
               </div>
-              {selectedProduct.size && (
+              {selectedProduct.sizes && (
                 <div>
                   <span className="text-gray-900">Size:</span>
-                  <span className="ml-2 font-medium text-gray-900">{selectedProduct.size}</span>
+                  <span className="ml-2 font-medium text-gray-900">{selectedProduct.sizes}</span>
                 </div>
               )}
               {selectedProduct.color && (

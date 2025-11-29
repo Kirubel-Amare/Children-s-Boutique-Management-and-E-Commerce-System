@@ -121,7 +121,7 @@ export default function DashboardProductsPage() {
                               {product.name}
                             </div>
                             <div className="text-sm text-gray-500">
-                              {product.color} {product.size && `- ${product.size}`}
+                              {product.color} {product.sizes && `- ${product.sizes}`}
                             </div>
                           </div>
                         </div>
