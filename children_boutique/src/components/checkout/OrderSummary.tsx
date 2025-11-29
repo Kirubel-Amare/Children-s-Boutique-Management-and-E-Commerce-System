@@ -68,7 +68,7 @@ const OrderItem: React.FC<{ item: any }> = ({ item }) => (
     </div>
     <div className="text-right">
       <p className="font-semibold text-gray-900">
-        ${(item.product.price * item.quantity).toFixed(2)}
+        ETB {(item.product.price * item.quantity).toFixed(2)}
       </p>
     </div>
   </div>
@@ -83,21 +83,21 @@ const OrderTotals: React.FC<OrderSummaryProps> = ({
   <div className="border-t border-gray-200 pt-4 space-y-3">
     <div className="flex justify-between text-sm">
       <span className="text-gray-600">Subtotal</span>
-      <span className="text-gray-900">${subtotal.toFixed(2)}</span>
+      <span className="text-gray-900">ETB {subtotal.toFixed(2)}</span>
     </div>
     <div className="flex justify-between text-sm">
       <span className="text-gray-600">Shipping</span>
       <span className="text-gray-900">
-        {shippingFee === 0 ? 'FREE' : `$${shippingFee.toFixed(2)}`}
+        {shippingFee === 0 ? 'FREE' : `ETB ${shippingFee.toFixed(2)}`}
       </span>
     </div>
     <div className="flex justify-between text-sm">
       <span className="text-gray-600">Tax</span>
-      <span className="text-gray-900">${tax.toFixed(2)}</span>
+      <span className="text-gray-900">ETB {tax.toFixed(2)}</span>
     </div>
     <div className="flex justify-between text-lg font-semibold border-t border-gray-200 pt-3">
       <span className="text-gray-900">Total</span>
-      <span className="text-pink-600">${total.toFixed(2)}</span>
+      <span className="text-pink-600">ETB {total.toFixed(2)}</span>
     </div>
   </div>
 );
@@ -105,7 +105,7 @@ const OrderTotals: React.FC<OrderSummaryProps> = ({
 const FreeShippingNotice: React.FC<{ subtotal: number }> = ({ subtotal }) => (
   <div className="mt-4 p-3 bg-blue-50 rounded-lg border border-blue-200">
     <p className="text-sm text-blue-800 text-center">
-      Add ${(50 - subtotal).toFixed(2)} more for free shipping!
+      Add ETB {(50 - subtotal).toFixed(2)} more for free shipping!
     </p>
   </div>
 );
@@ -114,7 +114,7 @@ const TrustBadges: React.FC = () => (
   <div className="mt-6 grid grid-cols-3 gap-4 text-center">
     <div>
       <TruckIcon className="h-6 w-6 text-gray-400 mx-auto mb-1" />
-      <p className="text-xs text-gray-600">Free Shipping Over $50</p>
+      <p className="text-xs text-gray-600">Free Shipping Over ETB50</p>
     </div>
     <div>
       <ShieldCheckIcon className="h-6 w-6 text-gray-400 mx-auto mb-1" />

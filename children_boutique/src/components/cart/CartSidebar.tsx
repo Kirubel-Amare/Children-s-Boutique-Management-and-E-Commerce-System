@@ -83,7 +83,7 @@ export default function CartSidebar() {
                     <div className="flex flex-col">
                       <span className="font-medium text-gray-900 line-clamp-1">{item.product.name}</span>
                       <span className="text-gray-500 text-sm">x{item.quantity}</span>
-                      <span className="text-pink-600 font-semibold">${(item.product.price * item.quantity).toFixed(2)}</span>
+                      <span className="text-pink-600 font-semibold">ETB {(item.product.price * item.quantity).toFixed(2)}</span>
                     </div>
                   </div>
 
@@ -130,15 +130,15 @@ export default function CartSidebar() {
             <div className="p-6 border-t space-y-4">
               <div className="flex justify-between text-gray-600">
                 <span>Subtotal</span>
-                <span>${total.toFixed(2)}</span>
+                <span>ETB {total.toFixed(2)}</span>
               </div>
               <div className="flex justify-between text-gray-600">
                 <span>Tax (10%)</span>
-                <span>${tax.toFixed(2)}</span>
+                <span>ETB {tax.toFixed(2)}</span>
               </div>
               <div className="flex justify-between font-semibold text-lg text-pink-600">
                 <span>Total</span>
-                <span>${finalTotal.toFixed(2)}</span>
+                <span>ETB {finalTotal.toFixed(2)}</span>
               </div>
               <button
                 onClick={() => {

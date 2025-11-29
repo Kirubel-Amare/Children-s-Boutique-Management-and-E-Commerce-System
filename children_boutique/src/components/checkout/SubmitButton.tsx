@@ -26,7 +26,7 @@ export const SubmitButton: React.FC<SubmitButtonProps> = ({
           Processing...
         </div>
       ) : (
-        total ? `Complete Order - $${total.toFixed(2)}` : children
+        total ? `Complete Order - ETB ${total.toFixed(2)}` : children
       )}
     </button>
   );

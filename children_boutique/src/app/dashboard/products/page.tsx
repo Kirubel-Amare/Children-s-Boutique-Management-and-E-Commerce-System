@@ -133,7 +133,7 @@ export default function DashboardProductsPage() {
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <span className="text-sm font-medium text-gray-900">
-                          ${product.price}
+                          ETB {product.price}
                         </span>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">

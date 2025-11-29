@@ -52,7 +52,7 @@ const QUICK_ACTIONS = [
 const STATS_CONFIG = (metrics: any) => [
   {
     name: 'Total Revenue',
-    value: `$${metrics.totalRevenue.toFixed(2)}`,
+    value: `ETB ${metrics.totalRevenue.toFixed(2)}`,
     change: '12.5%',
     changeType: 'increase' as const,
     icon: ChartBarIcon,
@@ -60,7 +60,7 @@ const STATS_CONFIG = (metrics: any) => [
   },
   {
     name: 'Total Profit',
-    value: `$${metrics.totalProfit.toFixed(2)}`,
+    value: `ETB ${metrics.totalProfit.toFixed(2)}`,
     change: `${metrics.profitMargin.toFixed(1)}% margin`,
     changeType: 'increase' as const,
     icon: CurrencyDollarIcon,

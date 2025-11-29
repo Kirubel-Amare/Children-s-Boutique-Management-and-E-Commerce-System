@@ -60,16 +60,16 @@ export default async function ProductPage({ params }: ProductPageProps) {
                 
                 <div className="flex items-center space-x-4 mb-4">
                   <span className="text-3xl font-bold text-pink-600">
-                    ${product.price}
+                    ETB {product.price}
                   </span>
-                  <span className={`px-3 py-1 rounded-full text-sm font-medium ${
+                  <span className={`px-3 py-1 rounded-full text-sm font-medium ETB{
                     product.quantity > 10 
                       ? 'bg-green-100 text-green-800'
                       : product.quantity > 0
                       ? 'bg-yellow-100 text-yellow-800'
                       : 'bg-red-100 text-red-800'
                   }`}>
-                    {product.quantity > 0 ? `${product.quantity} in stock` : 'Out of stock'}
+                    {product.quantity > 0 ? `ETB{product.quantity} in stock` : 'Out of stock'}
                   </span>
                 </div>
               </div>
