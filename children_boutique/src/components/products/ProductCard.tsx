@@ -82,7 +82,7 @@ export default function ProductCard({ product }: ProductCardProps) {
         
         <div className="flex items-center justify-between mb-4">
           <div>
-            <span className="text-2xl font-bold text-pink-600">
+            <span className="text-md font-bold text-pink-600">
               ETB {product.price.toFixed(2)}
             </span>
           </div>

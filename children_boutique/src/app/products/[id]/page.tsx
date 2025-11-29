@@ -63,10 +63,10 @@ export default async function ProductPage({ params }: ProductPageProps) {
                     ETB {product.price}
                   </span>
                   <span className={`px-3 py-1 rounded-full text-sm font-medium ${product.quantity > 10
-                      ? 'bg-green-100 text-green-800'
-                      : product.quantity > 0
-                        ? 'bg-yellow-100 text-yellow-800'
-                        : 'bg-red-100 text-red-800'
+                    ? 'bg-green-100 text-green-800'
+                    : product.quantity > 0
+                      ? 'bg-yellow-100 text-yellow-800'
+                      : 'bg-red-100 text-red-800'
                     }`}>
                     {product.quantity > 0 ? ` ${product.quantity} in stock` : 'Out of stock'}
                   </span>
@@ -99,11 +99,28 @@ export default async function ProductPage({ params }: ProductPageProps) {
                 )}
 
                 {product.color && (
-                  <div className="flex">
+                  <div className="flex items-start">
                     <span className="text-gray-700 font-medium w-24">Color:</span>
-                    <span className="text-gray-600">{product.color}</span>
+
+                    <div className="flex gap-2 flex-wrap">
+                      {Array.isArray(product.color) ? (
+                        product.color.map((col: string, index: number) => (
+                          <span
+                            key={index}
+                            className="px-2 py-1 bg-gray-100 rounded-md text-gray-700 text-sm"
+                          >
+                            {col}
+                          </span>
+                        ))
+                      ) : (
+                        <span className="px-2 py-1 bg-gray-100 rounded-md text-gray-700 text-sm">
+                          {product.color}
+                        </span>
+                      )}
+                    </div>
                   </div>
                 )}
+
               </div>
 
               {/* Action Buttons */}
