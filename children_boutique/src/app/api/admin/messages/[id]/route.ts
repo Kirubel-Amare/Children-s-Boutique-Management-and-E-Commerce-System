@@ -6,12 +6,14 @@ import { prisma } from '@/lib/db';
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: { id: string } }
 ) {
   try {
-    const session = await getServerSession(authOptions as any);
+    const { params } = context;
 
-    if (!session || session.user.role !== 'ADMIN') {
+    const session = await getServerSession(authOptions as any) as any;
+
+    if (!session || session.user?.role !== 'ADMIN') {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
@@ -56,10 +58,12 @@ export async function GET(
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: { id: string } }
 ) {
   try {
-    const session = await getServerSession(authOptions);
+    const { params } = context;
+
+    const session = await getServerSession(authOptions as any) as any;
 
     if (!session || session.user.role !== 'ADMIN') {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
