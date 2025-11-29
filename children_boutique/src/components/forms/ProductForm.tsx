@@ -18,6 +18,8 @@ export default function ProductForm({ product, mode }: ProductFormProps) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [shoeSizeInput, setShoeSizeInput] = useState('');
+  const [imagePreview, setImagePreview] = useState('');
+  const [imageMethod, setImageMethod] = useState<'upload' | 'url'>('url');
 
   // Helper function to convert sizes string to array
   const parseSizes = (sizes: string | string[]): string[] => {
@@ -43,6 +45,14 @@ export default function ProductForm({ product, mode }: ProductFormProps) {
     color: product?.color || '',
     imageUrl: product?.imageUrl || '',
   });
+
+  // Initialize image preview and method
+  useEffect(() => {
+    if (product?.imageUrl) {
+      setImagePreview(product.imageUrl);
+      setImageMethod('url');
+    }
+  }, [product?.imageUrl]);
 
   // Initialize shoe size input when product loads or category changes to shoes
   useEffect(() => {
@@ -70,6 +80,11 @@ export default function ProductForm({ product, mode }: ProductFormProps) {
       ...prev,
       [name]: name === 'originalPrice' || name === 'profitAmount' || name === 'quantity' ? Number(value) : value,
     }));
+
+    // Update image preview when URL changes
+    if (name === 'imageUrl' && imageMethod === 'url') {
+      setImagePreview(value);
+    }
   };
 
   const handleSizeChange = (size: string) => {
@@ -96,6 +111,74 @@ export default function ProductForm({ product, mode }: ProductFormProps) {
     }));
   };
 
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    // Validate file type
+    if (!file.type.startsWith('image/')) {
+      setError('Please select a valid image file');
+      return;
+    }
+
+    // Validate file size (max 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      setError('Image size must be less than 5MB');
+      return;
+    }
+
+    setLoading(true);
+    setError('');
+
+    try {
+      // Create form data for file upload
+      const uploadFormData = new FormData();
+      uploadFormData.append('file', file);
+
+      // Upload image to your API endpoint
+      const response = await fetch('/api/upload', {
+        method: 'POST',
+        body: uploadFormData,
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to upload image');
+      }
+
+      const data = await response.json();
+      
+      // Update form data with the uploaded image URL
+      setFormData(prev => ({
+        ...prev,
+        imageUrl: data.url,
+      }));
+      
+      setImagePreview(data.url);
+      
+    } catch (err) {
+      console.error('Error uploading image:', err);
+      setError(err instanceof Error ? err.message : 'Failed to upload image');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleImageMethodChange = (method: 'upload' | 'url') => {
+    setImageMethod(method);
+    setError('');
+    
+    if (method === 'url') {
+      // When switching to URL method, use the existing imageUrl
+      setImagePreview(formData.imageUrl);
+    } else {
+      // When switching to upload method, clear the preview if it was from URL
+      if (formData.imageUrl && formData.imageUrl.startsWith('http')) {
+        setImagePreview('');
+        setFormData(prev => ({ ...prev, imageUrl: '' }));
+      }
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -104,6 +187,12 @@ export default function ProductForm({ product, mode }: ProductFormProps) {
     // Validation
     if (formData.sizes.length === 0) {
       setError('Please provide at least one size');
+      setLoading(false);
+      return;
+    }
+
+    if (!formData.imageUrl) {
+      setError('Please provide an image');
       setLoading(false);
       return;
     }
@@ -374,20 +463,89 @@ export default function ProductForm({ product, mode }: ProductFormProps) {
             />
           </div>
 
-          {/* Image URL */}
+          {/* Image Input Section */}
           <div>
-            <label htmlFor="imageUrl" className="block text-sm font-medium text-gray-700 mb-1">
-              Image URL
+            <label className="block text-sm font-medium text-gray-700 mb-3">
+              Product Image *
             </label>
-            <input
-              type="url"
-              id="imageUrl"
-              name="imageUrl"
-              value={formData.imageUrl}
-              onChange={handleChange}
-              className="block w-full pl-3 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-pink-500 bg-white text-gray-900 placeholder-gray-500 transition-colors"
-              placeholder="https://example.com/image.jpg"
-            />
+            
+            {/* Image Method Toggle */}
+            <div className="flex space-x-4 mb-4">
+              <button
+                type="button"
+                onClick={() => handleImageMethodChange('upload')}
+                className={`px-4 py-2 text-sm font-medium rounded-lg border transition-colors ${
+                  imageMethod === 'upload'
+                    ? 'bg-pink-100 text-pink-700 border-pink-300'
+                    : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
+                }`}
+              >
+                Upload Image
+              </button>
+              <button
+                type="button"
+                onClick={() => handleImageMethodChange('url')}
+                className={`px-4 py-2 text-sm font-medium rounded-lg border transition-colors ${
+                  imageMethod === 'url'
+                    ? 'bg-pink-100 text-pink-700 border-pink-300'
+                    : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
+                }`}
+              >
+                Use URL
+              </button>
+            </div>
+
+            {/* Image Upload Input */}
+            {imageMethod === 'upload' && (
+              <div className="space-y-3">
+                <input
+                  type="file"
+                  id="imageUpload"
+                  accept="image/*"
+                  onChange={handleImageUpload}
+                  className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-pink-50 file:text-pink-700 hover:file:bg-pink-100"
+                />
+                <p className="text-xs text-gray-500">
+                  Supported formats: JPG, PNG, WebP. Max size: 5MB
+                </p>
+              </div>
+            )}
+
+            {/* Image URL Input */}
+            {imageMethod === 'url' && (
+              <div>
+                <input
+                  type="url"
+                  id="imageUrl"
+                  name="imageUrl"
+                  value={formData.imageUrl}
+                  onChange={handleChange}
+                  className="block w-full pl-3 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-pink-500 bg-white text-gray-900 placeholder-gray-500 transition-colors"
+                  placeholder="https://example.com/image.jpg"
+                />
+                <p className="text-xs text-gray-500 mt-1">
+                  Enter the full URL of the product image
+                </p>
+              </div>
+            )}
+
+            {/* Image Preview */}
+            {imagePreview && (
+              <div className="mt-4">
+                <p className="text-sm font-medium text-gray-700 mb-2">Preview:</p>
+                <div className="relative w-32 h-32 border border-gray-300 rounded-lg overflow-hidden">
+                  <img
+                    src={imagePreview}
+                    alt="Product preview"
+                    className="w-full h-full object-cover"
+                    onError={() => {
+                      setError('Failed to load image');
+                      setImagePreview('');
+                    }}
+                  />
+                </div>
+              </div>
+            )}
           </div>
 
           <div className="flex justify-end space-x-4 pt-6">
@@ -400,7 +558,7 @@ export default function ProductForm({ product, mode }: ProductFormProps) {
             </button>
             <button
               type="submit"
-              disabled={loading || formData.sizes.length === 0}
+              disabled={loading || formData.sizes.length === 0 || !formData.imageUrl}
               className="px-4 py-2 text-sm font-medium text-white bg-pink-600 border border-transparent rounded-md hover:bg-pink-700 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-pink-500 disabled:opacity-50"
             >
               {loading ? 'Saving...' : mode === 'create' ? 'Create Product' : 'Update Product'}
