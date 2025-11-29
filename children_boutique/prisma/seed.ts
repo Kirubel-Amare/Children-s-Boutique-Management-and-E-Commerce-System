@@ -1,5 +1,5 @@
 // prisma/seed.ts
-import { PrismaClient, UserRole } from '@prisma/client'
+import { PrismaClient, UserRole, UserStatus } from '@prisma/client'
 import bcrypt from 'bcryptjs'
 
 const prisma = new PrismaClient()
@@ -16,7 +16,7 @@ async function main() {
       password: hashedPassword,
       name: 'Admin User',
       role: UserRole.ADMIN,
-      status: 'active',
+      status: UserStatus.active,
       isEmailVerified: true,
     },
   })
@@ -30,53 +30,53 @@ async function main() {
       password: hashedPassword,
       name: 'Teller User',
       role: UserRole.TELLER,
-      status: 'active',
+      status: UserStatus.active,
       isEmailVerified: true,
     },
   })
 
-await prisma.product.createMany({
-  data: [
-    {
-      name: 'Kids T-Shirt',
-      description: 'Comfortable cotton t-shirt for kids',
-      originalPrice: 12,
-      profitPercent: 33,
-      profitAmount: 4,
-      price: 16,
-      quantity: 20,
-      category: 'clothes',
-      sizes: ['M'],     // <-- changed to array
-      color: 'Blue',
-    },
-    {
-      name: 'Children Sneakers',
-      description: 'Durable sneakers for active kids',
-      originalPrice: 25,
-      profitPercent: 40,
-      profitAmount: 10,
-      price: 35,
-      quantity: 15,
-      category: 'shoes',
-      sizes: ['28'],    // <-- changed to array
-      color: 'White',
-    },
-    {
-      name: 'Baby Romper',
-      description: 'Adorable romper for babies',
-      originalPrice: 15,
-      profitPercent: 53,
-      profitAmount: 8,
-      price: 23,
-      quantity: 8,
-      category: 'clothes',
-      sizes: ['6M'],    // <-- changed to array
-      color: 'Pink',
-    },
-  ],
-  skipDuplicates: true,
-})
-  
+  // Seed products
+  await prisma.product.createMany({
+    data: [
+      {
+        name: 'Kids T-Shirt',
+        description: 'Comfortable cotton t-shirt for kids',
+        originalPrice: 12,
+        profitPercent: 33,
+        profitAmount: 4,
+        price: 16,
+        quantity: 20,
+        category: 'clothes',
+        sizes: ['M'],
+        color: 'Blue',
+      },
+      {
+        name: 'Children Sneakers',
+        description: 'Durable sneakers for active kids',
+        originalPrice: 25,
+        profitPercent: 40,
+        profitAmount: 10,
+        price: 35,
+        quantity: 15,
+        category: 'shoes',
+        sizes: ['28'],
+        color: 'White',
+      },
+      {
+        name: 'Baby Romper',
+        description: 'Adorable romper for babies',
+        originalPrice: 15,
+        profitPercent: 53,
+        profitAmount: 8,
+        price: 23,
+        quantity: 8,
+        category: 'clothes',
+        sizes: ['6M'],
+        color: 'Pink',
+      },
+    ],
+    skipDuplicates: true,
+  })
 
   console.log('✅ Seed completed successfully')
 }
