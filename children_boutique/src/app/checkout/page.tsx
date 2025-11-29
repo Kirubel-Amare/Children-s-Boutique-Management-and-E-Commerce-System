@@ -13,11 +13,11 @@ import { SubmitButton } from '@/components/checkout/SubmitButton';
 import { SecurityNotice } from '@/components/checkout/SecurityNotice';
 import { EmptyCart } from '@/components/checkout/EmptyCart';
 import { ErrorMessage } from '@/components/auth/ErrorMessage';
-import { 
+import {
   UserIcon,
   EnvelopeIcon,
   MapPinIcon,
-  CreditCardIcon 
+  CreditCardIcon
 } from '@heroicons/react/24/outline';
 
 const PROGRESS_STEPS = [
@@ -66,7 +66,7 @@ export default function CheckoutPage() {
             {/* Left Column - Customer Information */}
             <div className="bg-white rounded-2xl shadow-sm p-6">
               <h2 className="text-xl font-semibold text-gray-900 mb-6">Customer Information</h2>
-              
+
               <form onSubmit={handleSubmit} className="space-y-6">
                 {/* Personal Information */}
                 <FormSection title="Personal Information" icon={UserIcon}>
@@ -133,7 +133,7 @@ export default function CheckoutPage() {
                       label="Street Address"
                       error={errors.address}
                     />
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <FormInput
                         id="city"
                         name="city"

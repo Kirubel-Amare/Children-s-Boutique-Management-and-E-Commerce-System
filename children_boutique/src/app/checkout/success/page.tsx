@@ -80,8 +80,8 @@ export default function OrderSuccessPage() {
           <h3 className="font-semibold text-gray-900 mb-4">Need Help?</h3>
           <div className="space-y-3 text-sm text-gray-600">
             <p>If you have any questions about your order, please contact our customer service team.</p>
-            <p>Email: support@boutique.com</p>
-            <p>Phone: +1 (555) 123-4567</p>
+            <p>Email: akirubel8@gmail.com</p>
+            <p>Phone: +251 955901762</p>
           </div>
         </div>
 

@@ -41,11 +41,11 @@ export const useCheckout = (): UseCheckoutReturn => {
     firstName: '',
     lastName: '',
     email: '',
-    phone: '',
+    phone: '+251',
     address: '',
     city: '',
     zipCode: '',
-    country: '',
+    country: 'Ethiopia',
   });
 
   // Calculate order summary
