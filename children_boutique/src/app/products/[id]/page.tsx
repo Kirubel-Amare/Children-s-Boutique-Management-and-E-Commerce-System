@@ -23,7 +23,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
     <Layout>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="mb-4">
-          <Link 
+          <Link
             href="/products"
             className="text-pink-600 hover:text-pink-700 font-medium"
           >
@@ -57,18 +57,17 @@ export default async function ProductPage({ params }: ProductPageProps) {
                 <p className="text-gray-600 text-lg mb-4">
                   {product.description}
                 </p>
-                
+
                 <div className="flex items-center space-x-4 mb-4">
                   <span className="text-3xl font-bold text-pink-600">
                     ETB {product.price}
                   </span>
-                  <span className={`px-3 py-1 rounded-full text-sm font-medium ${
-                    product.quantity > 10 
+                  <span className={`px-3 py-1 rounded-full text-sm font-medium ${product.quantity > 10
                       ? 'bg-green-100 text-green-800'
                       : product.quantity > 0
-                      ? 'bg-yellow-100 text-yellow-800'
-                      : 'bg-red-100 text-red-800'
-                  }`}>
+                        ? 'bg-yellow-100 text-yellow-800'
+                        : 'bg-red-100 text-red-800'
+                    }`}>
                     {product.quantity > 0 ? ` ${product.quantity} in stock` : 'Out of stock'}
                   </span>
                 </div>
@@ -83,11 +82,22 @@ export default async function ProductPage({ params }: ProductPageProps) {
                   </div>
                 )}
                 {product.sizes && (
-                  <div className="flex">
+                  <div className="flex items-start">
                     <span className="text-gray-700 font-medium w-24">Size:</span>
-                    <span className="text-gray-600">{product.sizes}</span>
+
+                    <div className="flex gap-2 flex-wrap">
+                      {product.sizes.map((size: string, index: number) => (
+                        <span
+                          key={index}
+                          className="px-2 py-1 bg-gray-100 rounded-md text-gray-700 text-sm"
+                        >
+                          {size}
+                        </span>
+                      ))}
+                    </div>
                   </div>
                 )}
+
                 {product.color && (
                   <div className="flex">
                     <span className="text-gray-700 font-medium w-24">Color:</span>
@@ -99,7 +109,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
               {/* Action Buttons */}
               <div className="space-y-4">
                 <AddToCartButton product={product} />
-                
+
               </div>
             </div>
           </div>
