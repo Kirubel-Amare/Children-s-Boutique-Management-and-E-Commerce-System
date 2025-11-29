@@ -1,7 +1,7 @@
 // components/admin/ContactMessages.tsx
 import { useState } from 'react';
 import { useContactMessages } from '@/hooks/useContactMessages';
-import { EnvelopeIcon, EyeIcon, ArchiveBoxIcon, CheckIcon, TrashIcon } from '@heroicons/react/24/outline';
+import { EnvelopeIcon, EyeIcon, ArchiveBoxIcon, CheckIcon, TrashIcon, ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 
 interface ContactMessagesProps {
@@ -42,10 +42,10 @@ export const ContactMessages: React.FC<ContactMessagesProps> = ({
   if (loading) {
     return (
       <div className="bg-white shadow rounded-lg">
-        <div className="px-4 py-5 sm:px-6 border-b border-gray-200">
+        <div className="px-4 py-4 sm:px-6 border-b border-gray-200">
           <h3 className="text-lg leading-6 font-medium text-gray-900">Contact Messages</h3>
         </div>
-        <div className="p-6">
+        <div className="p-4 sm:p-6">
           <div className="animate-pulse space-y-4">
             {[...Array(3)].map((_, i) => (
               <div key={i} className="space-y-2">
@@ -62,11 +62,11 @@ export const ContactMessages: React.FC<ContactMessagesProps> = ({
   if (error) {
     return (
       <div className="bg-white shadow rounded-lg">
-        <div className="px-4 py-5 sm:px-6 border-b border-gray-200">
+        <div className="px-4 py-4 sm:px-6 border-b border-gray-200">
           <h3 className="text-lg leading-6 font-medium text-gray-900">Contact Messages</h3>
         </div>
-        <div className="p-6">
-          <div className="text-center text-red-600">
+        <div className="p-4 sm:p-6">
+          <div className="text-center text-red-600 text-sm sm:text-base">
             Error loading messages: {error}
           </div>
         </div>
@@ -79,9 +79,9 @@ export const ContactMessages: React.FC<ContactMessagesProps> = ({
 
   return (
     <div className="bg-white shadow rounded-lg">
-      <div className="px-4 py-5 sm:px-6 border-b border-gray-200">
-        <div className="flex justify-between items-center">
-          <div>
+      <div className="px-4 py-4 sm:px-6 border-b border-gray-200">
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center space-y-3 sm:space-y-0">
+          <div className="text-center sm:text-left">
             <h3 className="text-lg leading-6 font-medium text-gray-900">Contact Messages</h3>
             {stats && (
               <p className="text-sm text-gray-500 mt-1">
@@ -89,37 +89,37 @@ export const ContactMessages: React.FC<ContactMessagesProps> = ({
               </p>
             )}
           </div>
-          <div className="flex space-x-2">
+          <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2">
             <select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value as any)}
-              className="text-sm border border-gray-300 text-gray-700 rounded-md px-3 py-1 focus:outline-none focus:ring-2 focus:ring-pink-500"
+              className="text-sm border border-gray-300 text-gray-700 rounded-md px-3 py-2 sm:py-1 focus:outline-none focus:ring-2 focus:ring-pink-500"
             >
               <option value="ALL">All Messages</option>
               <option value="UNREAD">Unread</option>
               <option value="READ">Read</option>
             </select>
             {showViewAll && (
-              <button className="text-pink-600 hover:text-pink-700 text-sm font-medium">
-                
-                <Link href="admin/messages" className="bg-pink-400 text-white px-4 py-2 rounded-lg font-semibold hover:bg-pink-500 transition-colors shadow-sm" >
+              <Link 
+                href="/admin/messages" 
+                className="bg-pink-500 text-white px-4 py-2 rounded-lg font-semibold hover:bg-pink-600 transition-colors shadow-sm text-center text-sm"
+              >
                 View All
-                </Link>
-              </button>
+              </Link>
             )}
           </div>
         </div>
       </div>
 
-      <div className="p-6">
+      <div className="p-4 sm:p-6">
         {messages.length === 0 ? (
-          <div className="text-center py-8 text-gray-500">
-            <EnvelopeIcon className="h-12 w-12 text-gray-400 mx-auto mb-3" />
-            <p>No messages found</p>
-            <p className="text-sm mt-1">Contact form messages will appear here</p>
+          <div className="text-center py-6 sm:py-8 text-gray-500">
+            <EnvelopeIcon className="h-10 w-10 sm:h-12 sm:w-12 text-gray-400 mx-auto mb-3" />
+            <p className="text-sm sm:text-base">No messages found</p>
+            <p className="text-xs sm:text-sm mt-1">Contact form messages will appear here</p>
           </div>
         ) : (
-          <div className="space-y-4">
+          <div className="space-y-3 sm:space-y-4">
             {messages.map((message) => (
               <MessageItem
                 key={message.id}
@@ -145,67 +145,73 @@ const MessageItem: React.FC<{
   const [expanded, setExpanded] = useState(false);
 
   return (
-    <div className="border border-gray-200 rounded-lg p-4 hover:border-gray-300 transition-colors">
-      <div className="flex justify-between items-start">
+    <div className="border border-gray-200 rounded-lg p-3 sm:p-4 hover:border-gray-300 transition-colors">
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start space-y-2 sm:space-y-0">
         <div className="flex-1 min-w-0">
-          <div className="flex items-center space-x-2 mb-2">
-            <h4 className="font-medium text-gray-900 truncate">{message.name}</h4>
-            <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${getStatusColor(message.status)}`}>
+          <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-2 space-y-1 sm:space-y-0">
+            <h4 className="font-medium text-gray-900 text-sm sm:text-base truncate">{message.name}</h4>
+            <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${getStatusColor(message.status)} self-start sm:self-auto`}>
               {message.status}
             </span>
           </div>
-          <p className="text-sm text-gray-600 truncate">{message.email}</p>
+          <p className="text-xs sm:text-sm text-gray-600 truncate mt-1">{message.email}</p>
           <p className="text-xs text-gray-500 mt-1">
-            {new Date(message.createdAt).toLocaleDateString()} at {new Date(message.createdAt).toLocaleTimeString()}
+            {new Date(message.createdAt).toLocaleDateString()} at {new Date(message.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
           </p>
         </div>
-        <div className="flex space-x-1 ml-4">
+        <div className="flex justify-between sm:justify-end space-x-1 sm:space-x-1 sm:ml-4">
           <button
             onClick={() => setExpanded(!expanded)}
-            className="text-gray-400 hover:text-gray-600 p-1"
+            className="text-gray-400 hover:text-gray-600 p-1 sm:p-1"
             title={expanded ? 'Collapse' : 'Expand'}
           >
-            <EyeIcon className="h-4 w-4" />
+            {expanded ? (
+              <ChevronUpIcon className="h-4 w-4 sm:h-4 sm:w-4" />
+            ) : (
+              <ChevronDownIcon className="h-4 w-4 sm:h-4 sm:w-4" />
+            )}
           </button>
-          {message.status === 'UNREAD' && (
+          <div className="flex space-x-1">
+            {message.status === 'UNREAD' && (
+              <button
+                onClick={() => onStatusUpdate(message.id, 'READ')}
+                className="text-blue-400 hover:text-blue-600 p-1"
+                title="Mark as read"
+              >
+                <CheckIcon className="h-4 w-4" />
+              </button>
+            )}
             <button
-              onClick={() => onStatusUpdate(message.id, 'READ')}
-              className="text-blue-400 hover:text-blue-600 p-1"
-              title="Mark as read"
+              onClick={() => onStatusUpdate(message.id, 'ARCHIVED')}
+              className="text-gray-400 hover:text-gray-600 p-1"
+              title="Archive"
             >
-              <CheckIcon className="h-4 w-4" />
+              <ArchiveBoxIcon className="h-4 w-4" />
             </button>
-          )}
-          <button
-            onClick={() => onStatusUpdate(message.id, 'ARCHIVED')}
-            className="text-gray-400 hover:text-gray-600 p-1"
-            title="Archive"
-          >
-            <ArchiveBoxIcon className="h-4 w-4" />
-          </button>
-          <button
-            onClick={() => onDelete(message.id)}
-            className="text-red-400 hover:text-red-600 p-1"
-            title="Delete"
-          >
-            <TrashIcon className="h-4 w-4" />
-          </button>
+            <button
+              onClick={() => onDelete(message.id)}
+              className="text-red-400 hover:text-red-600 p-1"
+              title="Delete"
+            >
+              <TrashIcon className="h-4 w-4" />
+            </button>
+          </div>
         </div>
       </div>
 
       {expanded && (
         <div className="mt-3 pt-3 border-t border-gray-200">
-          <p className="text-sm text-gray-700 whitespace-pre-wrap">{message.message}</p>
-          <div className="mt-3 flex space-x-2">
+          <p className="text-sm text-gray-700 whitespace-pre-wrap break-words">{message.message}</p>
+          <div className="mt-3 flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2">
             <a
               href={`mailto:${message.email}?subject=Re: Your message to Boutique&body=Dear ${message.name},%0D%0A%0D%0AThank you for your message...`}
-              className="text-sm bg-pink-600 text-white px-3 py-1 rounded hover:bg-pink-700 transition-colors"
+              className="text-sm bg-pink-600 text-white px-3 py-2 rounded hover:bg-pink-700 transition-colors text-center"
             >
               Reply via Email
             </a>
             <button
               onClick={() => onStatusUpdate(message.id, 'REPLIED')}
-              className="text-sm border border-gray-300 text-gray-700 px-3 py-1 rounded hover:bg-gray-50 transition-colors"
+              className="text-sm border border-gray-300 text-gray-700 px-3 py-2 rounded hover:bg-gray-50 transition-colors"
             >
               Mark as Replied
             </button>
